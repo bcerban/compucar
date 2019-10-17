@@ -2,14 +2,20 @@ package com.cerbansouto.compucar.services;
 
 import com.cerbansouto.compucar.api.ClientService;
 import com.cerbansouto.compucar.model.Client;
+import com.cerbansouto.compucar.services.dataAccess.ClientRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import java.util.List;
 
+@Service
 public class ClientServiceImpl implements ClientService {
 
+    @Autowired
+    private ClientRepository repository;
+
     public List<Client> list() {
-        throw new NotImplementedException();
+        return repository.findAll();
     }
 
     public Client fetch(int number) {
