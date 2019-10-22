@@ -11,6 +11,9 @@ public class Client {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    @Column(unique = true, nullable = false)
     private Long number;
 
     @Column

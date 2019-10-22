@@ -11,16 +11,17 @@ public class ReaderServiceImpl implements ReaderService {
         throw new NotImplementedException();
     }
 
+    @Override
+    public Reader fetch(Long id) {
+        return null;
+    }
+
     public List<Reader> list(int delta) {
         throw new NotImplementedException();
     }
 
     public void recharge(Reader reader) {
         reader.setBatteryUsed(0);
-    }
-
-    public Reader fetch(String code) {
-        throw new NotImplementedException();
     }
 
     public Reader create(Reader model) {
@@ -33,5 +34,10 @@ public class ReaderServiceImpl implements ReaderService {
 
     public void delete(Reader model) {
         throw new NotImplementedException();
+    }
+
+    @Override
+    public void delete(Long id) {
+
     }
 }
