@@ -51,11 +51,16 @@ public class ClientServiceImpl implements ClientService {
 
     @Transactional
     public Client update(Client client) throws InvalidEntityException {
-        log.info(String.format("###### Updating client with ID %d ######", client.getNumber()));
+        log.info(String.format("###### Updating client with ID %d ######", client.getId()));
         validateClientUpdate(client);
 
         try {
-            return repository.update(client);
+            Client existingClient = fetch(client.getId());
+            existingClient.setEmail(client.getEmail());
+            existingClient.setName(client.getName());
+            existingClient.setPhone(client.getPhone());
+            existingClient.setType(client.getType());
+            return repository.update(existingClient);
         } catch (DataIntegrityViolationException e) {
             throw new InvalidEntityException("Could not create client. Please check all information is correct.", e);
         }
@@ -63,7 +68,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Transactional
     public void delete(Client client) {
-        Client existingClient = repository.getById(client.getNumber());
+        Client existingClient = repository.getById(client.getId());
         if (existingClient != null) {
             existingClient.setDeleted(true);
             repository.update(existingClient);
@@ -81,18 +86,24 @@ public class ClientServiceImpl implements ClientService {
 
     private void validateNewClient(Client client) throws InvalidEntityException {
         validateClientType(client.getType());
-        //TODO: new client validation goes here
+        validateClientNumber(client.getNumber());
     }
 
     private void validateClientUpdate(Client client) throws InvalidEntityException {
         validateClientType(client.getType());
-        //TODO: client update validation goes here
+        validateClientNumber(client.getNumber());
     }
 
     private void validateClientType(String type) throws InvalidEntityException {
         if (type == null ||
                 !(TYPE_PERSON.equals(type.toUpperCase()) || TYPE_COMPANY.equals(type.toUpperCase()))) {
             throw new InvalidEntityException(String.format("Type provided for client (%s) is not valid.", type));
+        }
+    }
+
+    private void validateClientNumber(Long number) throws InvalidEntityException {
+        if (number == null || number == 0) {
+            throw new InvalidEntityException("Client number cannot be empty.");
         }
     }
 }

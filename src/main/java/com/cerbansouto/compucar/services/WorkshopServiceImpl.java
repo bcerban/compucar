@@ -1,7 +1,6 @@
 package com.cerbansouto.compucar.services;
 
 import com.cerbansouto.compucar.api.WorkshopService;
-import com.cerbansouto.compucar.model.Client;
 import com.cerbansouto.compucar.model.Workshop;
 import com.cerbansouto.compucar.services.dataAccess.WorkshopRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -9,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
@@ -44,6 +41,7 @@ public class WorkshopServiceImpl implements WorkshopService {
     @Override
     public Workshop create(Workshop model) throws InvalidEntityException {
         log.info(String.format("###### Creating workshop with code %s ######", model.getCode()));
+        validateWorkshopCode(model);
 
         try {
             return repository.create(model);
@@ -56,9 +54,14 @@ public class WorkshopServiceImpl implements WorkshopService {
     @Override
     public Workshop update(Workshop model) throws InvalidEntityException {
         log.info(String.format("###### Updating workshop with ID %d ######", model.getId()));
+        validateWorkshopCode(model);
 
         try {
-            return repository.update(model);
+            Workshop existingWorkshop = fetch(model.getId());
+            existingWorkshop.setName(model.getName());
+            existingWorkshop.setAddress(model.getAddress());
+            existingWorkshop.setCity(model.getCity());
+            return repository.update(existingWorkshop);
         } catch (DataIntegrityViolationException e) {
             throw new InvalidEntityException("Could not create workshop. Please check all information is correct.", e);
         }
@@ -81,6 +84,12 @@ public class WorkshopServiceImpl implements WorkshopService {
         if (existingModel != null) {
             existingModel.setDeleted(true);
             repository.update(existingModel);
+        }
+    }
+
+    private void validateWorkshopCode(Workshop workshop) throws InvalidEntityException {
+        if (workshop.getCode() == null || workshop.getCode().isEmpty()) {
+            throw new InvalidEntityException("Workshop code cannot be empty.");
         }
     }
 }
