@@ -11,8 +11,9 @@ public class MechanicServiceImpl implements MechanicService {
         throw new NotImplementedException();
     }
 
-    public Mechanic fetch(String code) {
-        throw new NotImplementedException();
+    @Override
+    public Mechanic fetch(Long id) {
+        return null;
     }
 
     public Mechanic create(Mechanic model) {
@@ -25,5 +26,10 @@ public class MechanicServiceImpl implements MechanicService {
 
     public void delete(Mechanic model) {
         throw new NotImplementedException();
+    }
+
+    @Override
+    public void delete(Long id) {
+
     }
 }
