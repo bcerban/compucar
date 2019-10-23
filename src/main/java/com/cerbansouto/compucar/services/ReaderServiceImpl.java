@@ -48,8 +48,12 @@ public class ReaderServiceImpl implements ReaderService {
         return found;
     }
 
+    @Cacheable(value = "readers")
+    @Override
+    @Transactional
     public List<Reader> list(int delta) {
-        throw new NotImplementedException();
+        log.info("###### Listing readers bu delta ######");
+        return repository.findAll(delta);
     }
 
     public void recharge(Reader reader) {

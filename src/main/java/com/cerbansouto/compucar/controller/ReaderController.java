@@ -1,9 +1,7 @@
 package com.cerbansouto.compucar.controller;
 
 import com.cerbansouto.compucar.api.ReaderService;
-import com.cerbansouto.compucar.api.WorkshopService;
 import com.cerbansouto.compucar.model.Reader;
-import com.cerbansouto.compucar.model.Workshop;
 import com.cerbansouto.compucar.services.InvalidEntityException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +18,13 @@ public class ReaderController {
     private ReaderService service;
 
     @GetMapping
-    public List<Reader> list() {
+    public List<Reader> list(@RequestParam(value = "delta", required = false) Integer delta) {
         log.info("list");
+
+        if (delta != null && delta > 0) {
+            return service.list(delta);
+        }
+
         return service.list();
     }
 
