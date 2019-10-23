@@ -9,6 +9,5 @@ public interface ModelService<T> {
     T fetch(Long id);
     T create(T model) throws InvalidEntityException;
     T update(T model) throws InvalidEntityException;
-    void delete(T model);
     void delete(Long id);
 }

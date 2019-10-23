@@ -69,16 +69,6 @@ public class WorkshopServiceImpl implements WorkshopService {
 
     @Transactional
     @Override
-    public void delete(Workshop model) {
-        Workshop existingModel = repository.getById(model.getId());
-        if (existingModel != null) {
-            existingModel.setDeleted(true);
-            repository.update(existingModel);
-        }
-    }
-
-    @Transactional
-    @Override
     public void delete(Long id) {
         Workshop existingModel = repository.getById(id);
         if (existingModel != null) {

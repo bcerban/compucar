@@ -67,15 +67,6 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Transactional
-    public void delete(Client client) {
-        Client existingClient = repository.getById(client.getId());
-        if (existingClient != null) {
-            existingClient.setDeleted(true);
-            repository.update(existingClient);
-        }
-    }
-
-    @Transactional
     public void delete(Long number) {
         Client existingClient = repository.getById(number);
         if (existingClient != null) {
