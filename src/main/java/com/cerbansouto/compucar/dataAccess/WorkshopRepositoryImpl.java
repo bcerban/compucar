@@ -3,8 +3,11 @@ package com.cerbansouto.compucar.dataAccess;
 import com.cerbansouto.compucar.model.Workshop;
 import com.cerbansouto.compucar.services.dataAccess.WorkshopRepository;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import javax.persistence.NoResultException;
 import java.util.List;
 
 @Component
@@ -21,6 +24,18 @@ public class WorkshopRepositoryImpl implements WorkshopRepository {
     @Override
     public Workshop getById(long id) {
         return sessionFactory.getCurrentSession().get(Workshop.class, id);
+    }
+
+    @Override
+    public Workshop getByCode(String code) {
+        Query query = sessionFactory.getCurrentSession().createQuery("FROM Workshop w WHERE w.code = :code AND w.deleted = 0");
+        query.setParameter("code", code);
+
+        try {
+            return (Workshop)query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.cerbansouto.compucar.controller;
 
 import com.cerbansouto.compucar.api.MechanicService;
 import com.cerbansouto.compucar.model.Mechanic;
+import com.cerbansouto.compucar.services.InvalidEntityException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,22 +17,22 @@ public class MechanicController {
 
     @GetMapping
     public List<Mechanic> getAll() {
-        return this.mechanicService.getAll();
+        return this.mechanicService.list();
     }
 
     @GetMapping(value = "/{id}")
     public Mechanic get(@PathVariable("id") long id) {
-        return this.mechanicService.get(id);
+        return this.mechanicService.fetch(id);
     }
 
     @PostMapping
-    public Mechanic create(@RequestBody Mechanic mechanic) {
+    public Mechanic create(@RequestBody Mechanic mechanic) throws InvalidEntityException {
         return this.mechanicService.create(mechanic);
     }
 
-    @PutMapping(value = "/{id}")
-    public Mechanic update(@PathVariable("id") long id, @RequestBody Mechanic mechanic) {
-        return this.mechanicService.update(id, mechanic);
+    @PutMapping
+    public Mechanic update(@RequestBody Mechanic mechanic) throws InvalidEntityException {
+        return this.mechanicService.update(mechanic);
     }
 
     @DeleteMapping(value = "{id}")

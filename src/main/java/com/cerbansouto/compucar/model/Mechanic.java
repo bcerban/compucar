@@ -1,5 +1,6 @@
 package com.cerbansouto.compucar.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -15,15 +16,19 @@ public class Mechanic {
     private long id;
 
     @Column(unique = true, nullable = false)
-    private long employeeCode;
+    private long number;
 
     @Column
     private String name;
 
-    @Column(unique = true)
+    @Column
     private String phoneNumber;
 
     @Column
     private Date hiringDate;
+
+    @JsonIgnore
+    @Column
+    private boolean deleted;
 
 }

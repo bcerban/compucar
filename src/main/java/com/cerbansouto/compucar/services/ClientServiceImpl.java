@@ -62,7 +62,7 @@ public class ClientServiceImpl implements ClientService {
             existingClient.setType(client.getType());
             return repository.update(existingClient);
         } catch (DataIntegrityViolationException e) {
-            throw new InvalidEntityException("Could not create client. Please check all information is correct.", e);
+            throw new InvalidEntityException("Could not update client. Please check all information is correct.", e);
         }
     }
 

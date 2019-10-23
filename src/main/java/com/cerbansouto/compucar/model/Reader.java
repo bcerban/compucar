@@ -1,59 +1,43 @@
 package com.cerbansouto.compucar.model;
 
+import com.fasterxml.jackson.annotation.*;
 import lombok.Data;
+import org.hibernate.annotations.NaturalId;
+
+import javax.persistence.*;
 
 @Data
+@Entity
+@Table(name = "reader")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Reader {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    @NaturalId
+    @Column(length = 100, unique = true, nullable = false)
     private String code;
+
+    @Column
     private String brand;
+
+    @Column
     private int batteryLife;
+
+    @Column
     private int batteryUsed;
 
+    @Transient
+    private String workshopCode;
+
+    @JsonIdentityReference(alwaysAsId = true)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "workshop", referencedColumnName = "code")
     private Workshop workshop;
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getBrand() {
-        return brand;
-    }
-
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
-
-    public int getBatteryLife() {
-        return batteryLife;
-    }
-
-    public void setBatteryLife(int batteryLife) {
-        this.batteryLife = batteryLife;
-    }
-
-    public int getBatteryUsed() {
-        return batteryUsed;
-    }
-
-    public void setBatteryUsed(int batteryUsed) {
-        this.batteryUsed = batteryUsed;
-    }
-
-    public Workshop getWorkshop() {
-        return workshop;
-    }
-
-    public void setWorkshop(Workshop workshop) {
-        this.workshop = workshop;
-    }
-
-    public int getRemainingBatteryLifetime()
-    {
-        return batteryLife - batteryUsed;
-    }
+    @JsonIgnore
+    @Column
+    private boolean deleted;
 }
