@@ -10,7 +10,7 @@ public class Main {
             AppServer webServer = new AppServer("/api/v1", WebContext.class);
             webServer.run();
         } catch (Exception e) {
-            // log.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
             throw e;
         }
     }

@@ -16,25 +16,25 @@ public class MechanicRepositoryImpl implements MechanicRepository {
     private SessionFactory sessionFactory;
 
     @Override
-    public List<Mechanic> getAll() {
+    public List<Mechanic> findAll() {
         return this.currentSession().createQuery("from Mechanic").list();
     }
 
     @Override
-    public Mechanic get(long id) {
+    public Mechanic getById(long id) {
         return this.currentSession().get(Mechanic.class, id);
     }
 
     @Override
     public Mechanic create(Mechanic mechanic) {
         long id = (long) this.currentSession().save(mechanic);
-        return this.get(id);
+        return this.getById(id);
     }
 
     @Override
-    public Mechanic update(long id, Mechanic mechanic) {
+    public Mechanic update(Mechanic mechanic) {
         this.currentSession().update(mechanic);
-        return this.get(id);
+        return this.getById(mechanic.getId());
     }
 
     @Override
