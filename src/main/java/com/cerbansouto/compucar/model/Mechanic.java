@@ -2,45 +2,28 @@ package com.cerbansouto.compucar.model;
 
 import lombok.Data;
 
+import javax.persistence.*;
 import java.util.Date;
 
 @Data
+@Entity
+@Table(name = "mechanic")
 public class Mechanic {
 
-    private int number;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
+    @Column(unique = true, nullable = false)
+    private long employeeCode;
+
+    @Column
     private String name;
-    private String phone;
-    private Date startDate;
 
-    public int getNumber() {
-        return number;
-    }
+    @Column(unique = true)
+    private String phoneNumber;
 
-    public void setNumber(int number) {
-        this.number = number;
-    }
+    @Column
+    private Date hiringDate;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
 }

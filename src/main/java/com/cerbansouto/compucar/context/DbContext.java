@@ -19,7 +19,7 @@ public class DbContext {
     public ComboPooledDataSource dataSource() {
         ComboPooledDataSource dataSource = new ComboPooledDataSource();
         try {
-            dataSource.setDriverClass("com.mysql.jdbc.Driver");
+            dataSource.setDriverClass("com.mysql.cj.jdbc.Driver");
             dataSource.setJdbcUrl("jdbc:mysql://localhost:3306/compucar");
             dataSource.setUser("root");
             dataSource.setPassword("root");
