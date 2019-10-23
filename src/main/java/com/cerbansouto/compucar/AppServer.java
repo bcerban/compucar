@@ -3,9 +3,12 @@ package com.cerbansouto.compucar;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
+
+import java.io.IOException;
 
 public class AppServer {
 
@@ -28,7 +31,7 @@ public class AppServer {
         server.join();
     }
 
-    private ServletContextHandler buildJettyContext() {
+    private ServletContextHandler buildJettyContext() throws IOException {
         ServletContextHandler jettyContext = new ServletContextHandler();
         jettyContext.setContextPath(contextPath);
 
@@ -42,6 +45,10 @@ public class AppServer {
         ContextLoaderListener contextLoaderListener = new ContextLoaderListener(applicationContext);
         jettyContext.addEventListener(contextLoaderListener);
         applicationContext.close();
+
+        ClassPathResource classPathResource = new ClassPathResource("/webapp");
+        String resourceBasePath = classPathResource.getURI().toString();
+        jettyContext.setResourceBase(resourceBasePath);
 
         return jettyContext;
     }
