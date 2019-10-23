@@ -17,7 +17,7 @@ public class MechanicRepositoryImpl implements MechanicRepository {
 
     @Override
     public List<Mechanic> findAll() {
-        return this.currentSession().createQuery("from Mechanic").list();
+        return this.currentSession().createQuery("FROM Mechanic c WHERE c.deleted = 0").list();
     }
 
     @Override

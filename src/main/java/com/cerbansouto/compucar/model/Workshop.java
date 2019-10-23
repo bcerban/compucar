@@ -3,11 +3,12 @@ package com.cerbansouto.compucar.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Data
 @Entity
 @Table(name = "workshop")
-public class Workshop {
+public class Workshop implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

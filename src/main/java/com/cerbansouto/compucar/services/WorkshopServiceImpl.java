@@ -9,6 +9,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.NoResultException;
 import java.util.List;
 
 @Slf4j
@@ -32,6 +33,18 @@ public class WorkshopServiceImpl implements WorkshopService {
 
         if (found == null || found.isDeleted()) {
             throw new EntityNotFoundException(String.format("No workshop with ID %d", id));
+        }
+
+        return found;
+    }
+
+    @Override
+    public Workshop fetch(String code) {
+        log.info(String.format("###### Fetching workshop with code %s ######", code));
+        Workshop found = repository.getByCode(code);
+
+        if (found == null || found.isDeleted()) {
+            throw new EntityNotFoundException(String.format("No workshop with code %s", code));
         }
 
         return found;

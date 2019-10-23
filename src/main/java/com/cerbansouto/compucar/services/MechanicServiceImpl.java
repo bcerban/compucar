@@ -29,7 +29,7 @@ public class MechanicServiceImpl implements MechanicService {
     @Override
     public Mechanic fetch(Long id) {
         Mechanic found = repository.getById(id);
-        if (found == null) {
+        if (found == null || found.isDeleted()) {
             throw new EntityNotFoundException(String.format("No mechanic with ID %d", id));
         }
 
