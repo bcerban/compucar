@@ -46,6 +46,13 @@ public class ReaderController {
         return service.update(reader);
     }
 
+    @PutMapping(value = "recharge/{id}")
+    public void rechargeReader(@PathVariable("id") Long id) {
+        log.info("rechargeReader {}", id);
+        Reader reader = service.fetch(id);
+        service.recharge(reader);
+    }
+
     @DeleteMapping(value = "/{id}")
     public void deleteReader(@PathVariable("id") Long id) {
         log.info("deleteReader {}", id);

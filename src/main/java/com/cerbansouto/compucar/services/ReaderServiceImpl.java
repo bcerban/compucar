@@ -56,8 +56,12 @@ public class ReaderServiceImpl implements ReaderService {
         return repository.findAll(delta);
     }
 
+    @CacheEvict(value = "readers", allEntries = true)
+    @Override
+    @Transactional
     public void recharge(Reader reader) {
         reader.setBatteryUsed(0);
+        repository.update(reader);
     }
 
     @CacheEvict(value = "readers", allEntries = true)
