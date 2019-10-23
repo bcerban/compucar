@@ -43,8 +43,8 @@ public class WorkshopController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public void deleteClient(@PathVariable("id") Long id) {
-        log.info("deleteClient {}", id);
+    public void deleteWorkshop(@PathVariable("id") Long id) {
+        log.info("deleteWorkshop {}", id);
         service.delete(id);
     }
 }

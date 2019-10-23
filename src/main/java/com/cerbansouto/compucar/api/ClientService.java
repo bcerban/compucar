@@ -14,6 +14,5 @@ public interface ClientService {
     Client fetch(Long number);
     Client create(Client client) throws InvalidEntityException;
     Client update(Client client) throws InvalidEntityException;
-    void delete(Client client);
     void delete(Long number);
 }

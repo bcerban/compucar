@@ -24,10 +24,6 @@ public class MechanicServiceImpl implements MechanicService {
         throw new NotImplementedException();
     }
 
-    public void delete(Mechanic model) {
-        throw new NotImplementedException();
-    }
-
     @Override
     public void delete(Long id) {
 

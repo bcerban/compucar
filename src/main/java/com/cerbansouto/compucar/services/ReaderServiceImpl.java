@@ -32,10 +32,6 @@ public class ReaderServiceImpl implements ReaderService {
         throw new NotImplementedException();
     }
 
-    public void delete(Reader model) {
-        throw new NotImplementedException();
-    }
-
     @Override
     public void delete(Long id) {
 

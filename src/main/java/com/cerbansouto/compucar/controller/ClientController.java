@@ -43,7 +43,7 @@ public class ClientController {
 
     @DeleteMapping(value = "/{id}")
     public void deleteClient(@PathVariable("id") Long id) {
-        log.info("deleteClient {}", id);
+        log.info("deleteWorkshop {}", id);
         clientService.delete(id);
     }
 }
