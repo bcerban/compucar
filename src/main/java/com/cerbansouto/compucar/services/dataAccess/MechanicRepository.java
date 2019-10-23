@@ -1,13 +1,13 @@
-package com.cerbansouto.compucar.api;
+package com.cerbansouto.compucar.services.dataAccess;
 
 import com.cerbansouto.compucar.model.Mechanic;
 
 import java.util.List;
 
-public interface MechanicService {
+public interface MechanicRepository {
     List<Mechanic> getAll();
     Mechanic get(long id);
     Mechanic create(Mechanic mechanic);
     Mechanic update(long id, Mechanic mechanic);
-    void delete(long id);
+    void delete(Mechanic mechanic);
 }

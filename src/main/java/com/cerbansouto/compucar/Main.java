@@ -7,10 +7,10 @@ import lombok.extern.slf4j.Slf4j;
 public class Main {
     public static void main(String[] args) throws Exception {
         try {
-            AppServer webServer = new AppServer("/", WebContext.class);
+            AppServer webServer = new AppServer("/api/v1", WebContext.class);
             webServer.run();
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            // log.error(e.getMessage(), e);
             throw e;
         }
     }
