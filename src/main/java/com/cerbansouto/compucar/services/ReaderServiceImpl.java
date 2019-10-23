@@ -3,17 +3,17 @@ package com.cerbansouto.compucar.services;
 import com.cerbansouto.compucar.api.ReaderService;
 import com.cerbansouto.compucar.api.WorkshopService;
 import com.cerbansouto.compucar.model.Reader;
-import com.cerbansouto.compucar.model.Workshop;
 import com.cerbansouto.compucar.services.dataAccess.ReaderRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.NoResultException;
 import java.util.List;
 
 @Slf4j
@@ -26,6 +26,7 @@ public class ReaderServiceImpl implements ReaderService {
     @Autowired
     private WorkshopService workshopService;
 
+    @Cacheable("readers")
     @Override
     @Transactional
     public List<Reader> list() {
@@ -33,6 +34,7 @@ public class ReaderServiceImpl implements ReaderService {
         return repository.findAll();
     }
 
+    @Cacheable(value = "reader")
     @Override
     @Transactional
     public Reader fetch(Long id) {
@@ -54,6 +56,7 @@ public class ReaderServiceImpl implements ReaderService {
         reader.setBatteryUsed(0);
     }
 
+    @CacheEvict(value = "readers", allEntries = true)
     @Override
     @Transactional
     public Reader create(Reader model) throws InvalidEntityException {
@@ -70,6 +73,7 @@ public class ReaderServiceImpl implements ReaderService {
         }
     }
 
+    @CacheEvict(value = "readers", allEntries = true)
     @Override
     @Transactional
     public Reader update(Reader model) throws InvalidEntityException {
@@ -86,6 +90,7 @@ public class ReaderServiceImpl implements ReaderService {
         }
     }
 
+    @CacheEvict(value = "readers", allEntries = true)
     @Override
     @Transactional
     public void delete(Long id) {

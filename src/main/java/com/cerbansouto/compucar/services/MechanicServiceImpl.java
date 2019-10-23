@@ -5,6 +5,8 @@ import com.cerbansouto.compucar.model.Mechanic;
 import com.cerbansouto.compucar.services.dataAccess.MechanicRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -19,12 +21,14 @@ public class MechanicServiceImpl implements MechanicService {
     @Autowired
     private MechanicRepository repository;
 
+    @Cacheable("mechanics")
     @Transactional
     @Override
     public List<Mechanic> list() {
         return this.repository.findAll();
     }
 
+    @Cacheable(value = "mechanic")
     @Transactional
     @Override
     public Mechanic fetch(Long id) {
@@ -36,6 +40,7 @@ public class MechanicServiceImpl implements MechanicService {
         return found;
     }
 
+    @CacheEvict(value = "mechanics", allEntries = true)
     @Transactional
     @Override
     public Mechanic create(Mechanic mechanic) throws InvalidEntityException {
@@ -49,6 +54,7 @@ public class MechanicServiceImpl implements MechanicService {
         }
     }
 
+    @CacheEvict(value = "mechanics", allEntries = true)
     @Transactional
     @Override
     public Mechanic update(Mechanic mechanic) throws InvalidEntityException {
@@ -66,6 +72,7 @@ public class MechanicServiceImpl implements MechanicService {
         }
     }
 
+    @CacheEvict(value = "mechanics", allEntries = true)
     @Transactional
     @Override
     public void delete(Long id) {
