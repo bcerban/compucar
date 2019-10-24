@@ -12,6 +12,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 
 @Slf4j
 @org.springframework.stereotype.Service
@@ -30,6 +31,9 @@ public class ServiceServiceImpl implements ServiceService {
 
     // TODO: inject via prop
     private int minimumBatteryLifeRequired = 20;
+    private int maximumDailyServicesForClient = 1;
+    private int maximumDailyServicesForMechanic = 5;
+    private int minimumMonthlyServicesForDiscount = 5;
 
     @Transactional
     @Override
@@ -38,10 +42,7 @@ public class ServiceServiceImpl implements ServiceService {
         validateService(service);
 
         try {
-            service.setClient(clientService.fetch(service.getClient().getNumber()));
-            service.setMechanic(mechanicService.fetch(service.getMechanic().getNumber()));
             Service created = repository.create(service);
-
             service.getReader().setBatteryUsed(service.getReader().getBatteryUsed() + service.getServiceTime());
             readerService.update(service.getReader());
 
@@ -59,6 +60,31 @@ public class ServiceServiceImpl implements ServiceService {
         validateMechanic(service.getMechanic());
         validateWorkshop(service.getWorkshop());
         validateReader(service.getReader());
+
+        service.setClient(clientService.fetch(service.getClient().getNumber()));
+        if (service.getClient().getType().equals(ClientService.TYPE_PERSON)) {
+            int serviceCount = repository.getCountForClientOnDate(service.getClient(), service.getDate());
+            if (serviceCount >= maximumDailyServicesForClient) {
+                throw new InvalidEntityException("This client can't submit any more orders today.");
+            }
+        } else {
+            int serviceCount = repository.getCountForClientOnMonth(service.getClient(), service.getDate());
+            if (serviceCount >= minimumMonthlyServicesForDiscount) {
+                service.setCost((float)(service.getCost() * 0.8));
+            }
+        }
+
+        service.setMechanic(mechanicService.fetch(service.getMechanic().getNumber()));
+        List<Service> servicesForMechanic = repository.listByMechanicAndDate(service.getMechanic(), service.getDate());
+        if (servicesForMechanic.size() > maximumDailyServicesForMechanic) {
+            throw new InvalidEntityException("This mechanic can't submit any more orders today.");
+        }
+
+        for (Service s : servicesForMechanic) {
+            if (s.getWorkshop().getCode() != service.getWorkshop().getCode()) {
+                throw new InvalidEntityException("Mechanic is already assigned to a different workshop.");
+            }
+        }
 
         service.setReader(readerService.fetch(service.getReader().getCode()));
         if (service.getReader().getRemainingBatteryLife() < minimumBatteryLifeRequired) {
