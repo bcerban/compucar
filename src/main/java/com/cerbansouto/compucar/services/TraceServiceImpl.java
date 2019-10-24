@@ -27,8 +27,8 @@ public class TraceServiceImpl implements TraceService {
 
     @Transactional
     @Override
-    public List<Trace> list(Date from, Date to) {
-        return repository.findAll(from, to);
+    public List<Trace> list(Date from, Date to, String sort) {
+        return repository.findAll(from, to, sort);
     }
 
     @Transactional

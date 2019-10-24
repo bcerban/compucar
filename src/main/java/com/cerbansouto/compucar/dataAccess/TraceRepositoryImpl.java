@@ -13,6 +13,9 @@ import java.util.List;
 @Component
 public class TraceRepositoryImpl implements TraceRepository {
 
+    private static final String ASC = "ASC";
+    private static final String DESC = "DESC";
+
     @Autowired
     private SessionFactory sessionFactory;
 
@@ -22,14 +25,18 @@ public class TraceRepositoryImpl implements TraceRepository {
     }
 
     @Override
-    public List<Trace> findAll(Date from, Date to) {
+    public List<Trace> findAll(Date from, Date to, String sort) {
+        if (sort == null || !sort.toUpperCase().equals(ASC)) {
+            sort = DESC;
+        }
+
         String queryString = "FROM Trace t";
         if (from != null && to != null) {
-            queryString += " WHERE DATE(t.date) >= :from_date AND DATE(t.date) <= :to_date";
+            queryString += " WHERE DATE(t.date) >= :from_date AND DATE(t.date) <= :to_date ORDER BY t.date " + sort;
         } else if (from != null) {
-            queryString += " WHERE DATE(t.date) >= :from_date";
+            queryString += " WHERE DATE(t.date) >= :from_date ORDER BY t.date " + sort;
         } else if (to != null) {
-            queryString += " WHERE DATE(t.date) <= :to_date";
+            queryString += " WHERE DATE(t.date) <= :to_date ORDER BY t.date " + sort;
         }
 
         Query query = sessionFactory.getCurrentSession().createQuery(queryString);

@@ -8,6 +8,6 @@ import java.util.List;
 public interface TraceService extends ModelService<Trace> {
     String USERNAME_HEADER = "User-Name";
 
-    List<Trace> list(Date from, Date to);
+    List<Trace> list(Date from, Date to, String sort);
     Trace fetch(Long id);
 }

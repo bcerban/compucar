@@ -24,9 +24,10 @@ public class TraceController {
     @GetMapping
     public List<Trace> list(
             @RequestParam(value = "from", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
-            @RequestParam(value = "to", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date to
+            @RequestParam(value = "to", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date to,
+            @RequestParam(value = "sort", required = false) String sort
     ) {
         log.info("list");
-        return service.list(from, to);
+        return service.list(from, to, sort);
     }
 }
