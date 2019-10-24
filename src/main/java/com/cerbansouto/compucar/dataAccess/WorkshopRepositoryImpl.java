@@ -22,11 +22,6 @@ public class WorkshopRepositoryImpl implements WorkshopRepository {
     }
 
     @Override
-    public Workshop getById(long id) {
-        return sessionFactory.getCurrentSession().get(Workshop.class, id);
-    }
-
-    @Override
     public Workshop getByCode(String code) {
         Query query = sessionFactory.getCurrentSession().createQuery("FROM Workshop w WHERE w.code = :code AND w.deleted = 0");
         query.setParameter("code", code);
@@ -40,7 +35,7 @@ public class WorkshopRepositoryImpl implements WorkshopRepository {
 
     @Override
     public Workshop create(Workshop entity) {
-        long savedId = (long)sessionFactory.getCurrentSession().save(entity);
+        String savedId = (String)sessionFactory.getCurrentSession().save(entity);
         return sessionFactory.getCurrentSession().get(Workshop.class, savedId);
     }
 

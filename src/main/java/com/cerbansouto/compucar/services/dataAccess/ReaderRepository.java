@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface ReaderRepository extends Repository<Reader> {
     List<Reader> findAll(int delta);
+    Reader getByCode(String code);
 }

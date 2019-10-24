@@ -25,7 +25,7 @@ public class MechanicServiceImpl implements MechanicService {
     @Transactional
     @Override
     public List<Mechanic> list() {
-        return this.repository.findAll();
+        return repository.findAll();
     }
 
     @Cacheable(value = "mechanic")
@@ -58,14 +58,14 @@ public class MechanicServiceImpl implements MechanicService {
     @Transactional
     @Override
     public Mechanic update(Mechanic mechanic) throws InvalidEntityException {
-        log.info(String.format("###### Updating mechanic with ID %d ######", mechanic.getId()));
+        log.info(String.format("###### Updating mechanic with ID %d ######", mechanic.getNumber()));
         validateMechanic(mechanic);
 
         try {
-            Mechanic mechanicToUpdate = repository.getById(mechanic.getId());
+            Mechanic mechanicToUpdate = fetch(mechanic.getNumber());
             mechanicToUpdate.setName(mechanic.getName());
-            mechanicToUpdate.setPhoneNumber(mechanic.getPhoneNumber());
-            mechanicToUpdate.setHiringDate(mechanic.getHiringDate());
+            mechanicToUpdate.setPhone(mechanic.getPhone());
+            mechanicToUpdate.setStartDate(mechanic.getStartDate());
             return repository.update(mechanicToUpdate);
         } catch (DataIntegrityViolationException e) {
             throw new InvalidEntityException("Could not update mechanic. Please check all information is correct.", e);
@@ -75,12 +75,9 @@ public class MechanicServiceImpl implements MechanicService {
     @CacheEvict(value = "mechanics", allEntries = true)
     @Transactional
     @Override
-    public void delete(Long id) {
-        Mechanic mechanic = repository.getById(id);
-        if (mechanic != null) {
-            mechanic.setDeleted(true);
-            repository.update(mechanic);
-        }
+    public void delete(Mechanic model) {
+        model.setDeleted(true);
+        repository.update(model);
     }
 
     private void validateMechanic(Mechanic mechanic) throws InvalidEntityException {

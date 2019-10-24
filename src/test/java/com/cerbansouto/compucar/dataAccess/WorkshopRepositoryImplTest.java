@@ -47,34 +47,35 @@ public class WorkshopRepositoryImplTest {
     }
 
     @Test
-    public void getById() {
-        long id = 100;
-
+    public void getByCode() {
+        String code = "WKSP001";
         Workshop workshop = mock(Workshop.class);
 
-        when(sessionFactory.getCurrentSession()).thenReturn(session);
-        when(session.get(Workshop.class, id)).thenReturn(workshop);
+        String queryString = "FROM Workshop w WHERE w.code = :code AND w.deleted = 0";
+        Query query = mock(Query.class);
 
-        repository.getById(id);
+        when(sessionFactory.getCurrentSession()).thenReturn(session);
+        when(session.createQuery(queryString)).thenReturn(query);
+        when(query.getSingleResult()).thenReturn(workshop);
+
+        repository.getByCode(code);
 
         verify(sessionFactory, times(1)).getCurrentSession();
-        verify(session, times(1)).get(Workshop.class, id);
     }
 
     @Test
     public void create() {
-        long id = 100;
-
+        String code = "WKSP001";
         Workshop workshop = mock(Workshop.class);
 
         when(sessionFactory.getCurrentSession()).thenReturn(session);
-        when(session.save(workshop)).thenReturn(id);
-        when(session.get(Workshop.class, id)).thenReturn(workshop);
+        when(session.save(workshop)).thenReturn(code);
+        when(session.get(Workshop.class, code)).thenReturn(workshop);
 
         repository.create(workshop);
 
         verify(sessionFactory, times(2)).getCurrentSession();
-        verify(session, times(1)).get(Workshop.class, id);
+        verify(session, times(1)).get(Workshop.class, code);
         verify(session, times(1)).save(workshop);
     }
 

@@ -1,5 +1,6 @@
 package com.cerbansouto.compucar.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
@@ -12,9 +13,6 @@ import java.util.Date;
 public class Mechanic {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
-
     @Column(unique = true, nullable = false)
     private long number;
 
@@ -22,13 +20,19 @@ public class Mechanic {
     private String name;
 
     @Column
-    private String phoneNumber;
+    private String phone;
 
     @Column
-    private Date hiringDate;
+    private Date startDate;
 
     @JsonIgnore
     @Column
     private boolean deleted;
 
+    public Mechanic() { }
+
+    @JsonCreator
+    public Mechanic(long number) {
+        this.number = number;
+    }
 }

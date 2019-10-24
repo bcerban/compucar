@@ -1,69 +1,56 @@
 package com.cerbansouto.compucar.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
+
+import javax.persistence.*;
 import java.util.Date;
 
+@Data
+@Entity
+@Table(name = "service")
 public class Service {
+
+    @Id
+    @Column(length = 100)
     private String code;
+
+    @Column
     private Date date;
+
+    @Column
     private int serviceTime;
+
+    @Column
     private float cost;
+
+    @JsonProperty(value = "clientCode")
+    @JsonIdentityReference(alwaysAsId = true)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn //(name = "client", referencedColumnName = "number")
     private Client client;
+
+    @JsonProperty(value = "mechanicCode")
+    @JsonIdentityReference(alwaysAsId = true)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn //(name = "mechanic", referencedColumnName = "number")
+    private Mechanic mechanic;
+
+    @JsonProperty(value = "readerCode")
+    @JsonIdentityReference(alwaysAsId = true)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn //(name = "reader", referencedColumnName = "code")
     private Reader reader;
+
+    @JsonProperty(value = "workshopCode")
+    @JsonIdentityReference(alwaysAsId = true)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn //(name = "workshop", referencedColumnName = "code")
     private Workshop workshop;
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public int getServiceTime() {
-        return serviceTime;
-    }
-
-    public void setServiceTime(int serviceTime) {
-        this.serviceTime = serviceTime;
-    }
-
-    public float getCost() {
-        return cost;
-    }
-
-    public void setCost(float cost) {
-        this.cost = cost;
-    }
-
-    public Client getClient() {
-        return client;
-    }
-
-    public void setClient(Client client) {
-        this.client = client;
-    }
-
-    public Reader getReader() {
-        return reader;
-    }
-
-    public void setReader(Reader reader) {
-        this.reader = reader;
-    }
-
-    public Workshop getWorkshop() {
-        return workshop;
-    }
-
-    public void setWorkshop(Workshop workshop) {
-        this.workshop = workshop;
-    }
+    @JsonIgnore
+    @Column
+    private boolean deleted;
 }

@@ -15,35 +15,38 @@ import java.util.List;
 public class ClientController {
 
     @Autowired
-    private ClientService clientService;
+    private ClientService service;
 
     @GetMapping
     public List<Client> list() {
         log.info("list");
-        return clientService.list();
+        return service.list();
     }
 
     @GetMapping(value = "/{id}")
     public Client getClient(@PathVariable("id") Long id) {
         log.info("getClient {}", id);
-        return clientService.fetch(id);
+        return service.fetch(id);
     }
 
     @PostMapping
     public Client createClient(@RequestBody Client client) throws InvalidEntityException {
         log.info("createClient with  {}", client);
-        return clientService.create(client);
+        return service.create(client);
     }
 
     @PutMapping
     public Client updateClient(@RequestBody Client client) throws InvalidEntityException {
         log.info("updateClient with  {}", client);
-        return clientService.update(client);
+        return service.update(client);
     }
 
     @DeleteMapping(value = "/{id}")
     public void deleteClient(@PathVariable("id") Long id) {
-        log.info("deleteWorkshop {}", id);
-        clientService.delete(id);
+        log.info("deleteClient {}", id);
+        Client model = service.fetch(id);
+        if (model != null) {
+            service.delete(model);
+        }
     }
 }

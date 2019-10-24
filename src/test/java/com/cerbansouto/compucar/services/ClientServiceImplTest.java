@@ -133,7 +133,7 @@ public class ClientServiceImplTest {
     @Test(expected = InvalidEntityException.class)
     public void updateWithNullType() throws InvalidEntityException {
         Client client = new Client();
-        client.setId((long) 100);
+        client.setNumber((long) 100);
         clientService.update(client);
 
         verify(repository, times(0)).update(client);
@@ -141,19 +141,17 @@ public class ClientServiceImplTest {
 
     @Test(expected = InvalidEntityException.class)
     public void updateWithDataIntegrityViolation() throws InvalidEntityException {
-        long clientId = 100;
         long clientNumber = 1234;
         String clientEmail = "test@email.com";
 
         Client client = new Client();
-        client.setId(clientId);
         client.setNumber(clientNumber);
         client.setEmail(clientEmail);
         client.setPhone("");
         client.setType(ClientService.TYPE_PERSON);
 
         Client existingClient = mock(Client.class);
-        when(repository.getById(clientId)).thenReturn(existingClient);
+        when(repository.getById(clientNumber)).thenReturn(existingClient);
         when(repository.update(existingClient)).thenThrow(new DataIntegrityViolationException(""));
 
         clientService.update(client);
@@ -167,19 +165,17 @@ public class ClientServiceImplTest {
 
     @Test
     public void update() throws InvalidEntityException {
-        long clientId = 100;
         long clientNumber = 1234;
         String clientEmail = "test@email.com";
 
         Client client = new Client();
-        client.setId(clientId);
         client.setNumber(clientNumber);
         client.setEmail(clientEmail);
         client.setPhone("");
         client.setType(ClientService.TYPE_PERSON);
 
         Client existingClient = mock(Client.class);
-        when(repository.getById(clientId)).thenReturn(existingClient);
+        when(repository.getById(clientNumber)).thenReturn(existingClient);
 
         clientService.update(client);
 
@@ -192,23 +188,10 @@ public class ClientServiceImplTest {
 
     @Test
     public void deleteWithExisting() {
-        long clientId = 100;
         Client existingClient = mock(Client.class);
-
-        when(repository.getById(clientId)).thenReturn(existingClient);
-        clientService.delete(clientId);
+        clientService.delete(existingClient);
 
         verify(repository, times(1)).update(existingClient);
         verify(existingClient, times(1)).setDeleted(true);
-    }
-
-    @Test
-    public void deleteWithoutExisting() {
-        long clientId = 100;
-
-        when(repository.getById(clientId)).thenReturn(null);
-        clientService.delete(clientId);
-
-        verify(repository, times(0)).update(any(Client.class));
     }
 }

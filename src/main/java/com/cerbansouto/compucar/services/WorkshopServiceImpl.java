@@ -9,7 +9,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.NoResultException;
 import java.util.List;
 
 @Slf4j
@@ -25,20 +24,8 @@ public class WorkshopServiceImpl implements WorkshopService {
         return repository.findAll();
     }
 
+    @Override
     @Transactional
-    @Override
-    public Workshop fetch(Long id) {
-        log.info(String.format("###### Fetching workshop with ID %d ######", id));
-        Workshop found = repository.getById(id);
-
-        if (found == null || found.isDeleted()) {
-            throw new EntityNotFoundException(String.format("No workshop with ID %d", id));
-        }
-
-        return found;
-    }
-
-    @Override
     public Workshop fetch(String code) {
         log.info(String.format("###### Fetching workshop with code %s ######", code));
         Workshop found = repository.getByCode(code);
@@ -66,11 +53,11 @@ public class WorkshopServiceImpl implements WorkshopService {
     @Transactional
     @Override
     public Workshop update(Workshop model) throws InvalidEntityException {
-        log.info(String.format("###### Updating workshop with ID %d ######", model.getId()));
+        log.info(String.format("###### Updating workshop with code %s ######", model.getCode()));
         validateWorkshopCode(model);
 
         try {
-            Workshop existingWorkshop = fetch(model.getId());
+            Workshop existingWorkshop = fetch(model.getCode());
             existingWorkshop.setName(model.getName());
             existingWorkshop.setAddress(model.getAddress());
             existingWorkshop.setCity(model.getCity());
@@ -82,12 +69,9 @@ public class WorkshopServiceImpl implements WorkshopService {
 
     @Transactional
     @Override
-    public void delete(Long id) {
-        Workshop existingModel = repository.getById(id);
-        if (existingModel != null) {
-            existingModel.setDeleted(true);
-            repository.update(existingModel);
-        }
+    public void delete(Workshop model) {
+        model.setDeleted(true);
+        repository.update(model);
     }
 
     private void validateWorkshopCode(Workshop workshop) throws InvalidEntityException {

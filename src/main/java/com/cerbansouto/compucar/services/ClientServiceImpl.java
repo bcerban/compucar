@@ -20,12 +20,14 @@ public class ClientServiceImpl implements ClientService {
     private ClientRepository repository;
 
     @Transactional
+    @Override
     public List<Client> list() {
         log.info("###### Listing clients ######");
         return repository.findAll();
     }
 
     @Transactional
+    @Override
     public Client fetch(Long number) {
         log.info(String.format("###### Fetching client with ID %d ######", number));
         Client found = repository.getById(number);
@@ -38,6 +40,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Transactional
+    @Override
     public Client create(Client client) throws InvalidEntityException {
         log.info(String.format("###### Creating client with Email %s ######", client.getEmail()));
         validateNewClient(client);
@@ -50,12 +53,13 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Transactional
+    @Override
     public Client update(Client client) throws InvalidEntityException {
-        log.info(String.format("###### Updating client with ID %d ######", client.getId()));
+        log.info(String.format("###### Updating client with ID %d ######", client.getNumber()));
         validateClientUpdate(client);
 
         try {
-            Client existingClient = fetch(client.getId());
+            Client existingClient = fetch(client.getNumber());
             existingClient.setEmail(client.getEmail());
             existingClient.setName(client.getName());
             existingClient.setPhone(client.getPhone());
@@ -67,12 +71,10 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Transactional
-    public void delete(Long number) {
-        Client existingClient = repository.getById(number);
-        if (existingClient != null) {
-            existingClient.setDeleted(true);
-            repository.update(existingClient);
-        }
+    @Override
+    public void delete(Client model) {
+        model.setDeleted(true);
+        repository.update(model);
     }
 
     private void validateNewClient(Client client) throws InvalidEntityException {
