@@ -2,7 +2,6 @@ package com.cerbansouto.compucar.model;
 
 import com.fasterxml.jackson.annotation.*;
 import lombok.Data;
-import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 
@@ -13,10 +12,6 @@ import javax.persistence.*;
 public class Reader {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
-    @NaturalId
     @Column(length = 100, unique = true, nullable = false)
     private String code;
 
@@ -29,15 +24,20 @@ public class Reader {
     @Column
     private int batteryUsed;
 
-    @Transient
-    private String workshopCode;
-
+    @JsonProperty(value = "workshopCode")
     @JsonIdentityReference(alwaysAsId = true)
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "workshop", referencedColumnName = "code")
+    @JoinColumn //(name = "workshopCode", referencedColumnName = "code")
     private Workshop workshop;
 
     @JsonIgnore
     @Column
     private boolean deleted;
+
+    public Reader() { }
+
+    @JsonCreator
+    public Reader(String code) {
+        this.code = code;
+    }
 }

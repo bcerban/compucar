@@ -28,10 +28,10 @@ public class ReaderController {
         return service.list();
     }
 
-    @GetMapping(value = "/{id}")
-    public Reader getReader(@PathVariable("id") Long id) {
-        log.info("getReader {}", id);
-        return service.fetch(id);
+    @GetMapping(value = "/{code}")
+    public Reader getReader(@PathVariable("code") String code) {
+        log.info("getReader {}", code);
+        return service.fetch(code);
     }
 
     @PostMapping
@@ -46,16 +46,19 @@ public class ReaderController {
         return service.update(reader);
     }
 
-    @PutMapping(value = "recharge/{id}")
-    public void rechargeReader(@PathVariable("id") Long id) {
-        log.info("rechargeReader {}", id);
-        Reader reader = service.fetch(id);
+    @PutMapping(value = "recharge/{code}")
+    public void rechargeReader(@PathVariable("code") String code) {
+        log.info("rechargeReader {}", code);
+        Reader reader = service.fetch(code);
         service.recharge(reader);
     }
 
-    @DeleteMapping(value = "/{id}")
-    public void deleteReader(@PathVariable("id") Long id) {
-        log.info("deleteReader {}", id);
-        service.delete(id);
+    @DeleteMapping(value = "/{code}")
+    public void deleteReader(@PathVariable("code") String code) {
+        log.info("deleteReader {}", code);
+        Reader model = service.fetch(code);
+        if (model != null) {
+            service.delete(model);
+        }
     }
 }

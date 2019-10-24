@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface ReaderService extends ModelService<Reader> {
     List<Reader> list(int delta);
+    Reader fetch(String code);
     void recharge(Reader reader);
 }

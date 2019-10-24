@@ -5,4 +5,6 @@ import com.cerbansouto.compucar.model.Client;
 public interface ClientService extends ModelService<Client> {
     String TYPE_PERSON = "PERSON";
     String TYPE_COMPANY = "COMPANY";
+
+    Client fetch(Long id);
 }

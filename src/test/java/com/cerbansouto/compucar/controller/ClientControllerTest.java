@@ -53,8 +53,11 @@ public class ClientControllerTest {
 
     @Test
     public void delete() {
-        long id = 100;
-        controller.deleteClient(id);
-        verify(service, times(1)).delete(id);
+        long clientId = 100;
+        Client existingClient = mock(Client.class);
+
+        when(service.fetch(clientId)).thenReturn(existingClient);
+        controller.deleteClient(clientId);
+        verify(service, times(1)).delete(existingClient);
     }
 }

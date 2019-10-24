@@ -1,5 +1,6 @@
 package com.cerbansouto.compucar.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import javax.persistence.*;
@@ -10,9 +11,6 @@ import javax.persistence.*;
 public class Client {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
     @Column(unique = true, nullable = false)
     private Long number;
 
@@ -31,4 +29,11 @@ public class Client {
     @JsonIgnore
     @Column
     private boolean deleted;
+
+    public Client() { }
+
+    @JsonCreator
+    public Client(Long number) {
+        this.number = number;
+    }
 }

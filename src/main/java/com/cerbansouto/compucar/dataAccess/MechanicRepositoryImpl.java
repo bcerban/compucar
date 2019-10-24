@@ -33,16 +33,16 @@ public class MechanicRepositoryImpl implements MechanicRepository {
 
     @Override
     public Mechanic update(Mechanic mechanic) {
-        this.currentSession().update(mechanic);
-        return this.getById(mechanic.getId());
+        currentSession().update(mechanic);
+        return getById(mechanic.getNumber());
     }
 
     @Override
     public void delete(Mechanic mechanic) {
-        this.currentSession().delete(mechanic);
+        currentSession().delete(mechanic);
     }
 
     private Session currentSession() {
-        return this.sessionFactory.getCurrentSession();
+        return sessionFactory.getCurrentSession();
     }
 }

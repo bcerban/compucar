@@ -1,7 +1,8 @@
 package com.cerbansouto.compucar.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.*;
 import lombok.Data;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -11,9 +12,6 @@ import java.io.Serializable;
 public class Workshop implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
     @Column(length = 100, unique = true, nullable = false)
     private String code;
 
@@ -29,4 +27,11 @@ public class Workshop implements Serializable {
     @JsonIgnore
     @Column
     private boolean deleted;
+
+    public Workshop() { }
+
+    @JsonCreator
+    public Workshop(String code) {
+        this.code = code;
+    }
 }

@@ -37,35 +37,35 @@ public class WorkshopServiceImplTest {
 
     @Test
     public void fetchFound() {
-        long id = 100;
+        String code = "WKSP001";
         Workshop workshop = mock(Workshop.class);
 
-        when(repository.getById(id)).thenReturn(workshop);
-        assertEquals(workshop, workshopService.fetch(id));
+        when(repository.getByCode(code)).thenReturn(workshop);
+        assertEquals(workshop, workshopService.fetch(code));
 
-        verify(repository, times(1)).getById(id);
+        verify(repository, times(1)).getByCode(code);
     }
 
     @Test(expected = EntityNotFoundException.class)
     public void fetchNotFound() {
-        long id = 100;
+        String code = "WKSP001";
 
-        when(repository.getById(id)).thenReturn(null);
-        workshopService.fetch(id);
+        when(repository.getByCode(code)).thenReturn(null);
+        workshopService.fetch(code);
 
-        verify(repository, times(1)).getById(id);
+        verify(repository, times(1)).getByCode(code);
     }
 
     @Test(expected = EntityNotFoundException.class)
     public void fetchDeleted() {
-        long id = 100;
+        String code = "WKSP001";
         Workshop workshop = mock(Workshop.class);
 
-        when(repository.getById(id)).thenReturn(workshop);
+        when(repository.getByCode(code)).thenReturn(workshop);
         when(workshop.isDeleted()).thenReturn(true);
-        workshopService.fetch(id);
+        workshopService.fetch(code);
 
-        verify(repository, times(1)).getById(id);
+        verify(repository, times(1)).getByCode(code);
     }
 
     @Test(expected = InvalidEntityException.class)
@@ -126,13 +126,12 @@ public class WorkshopServiceImplTest {
 
     @Test(expected = InvalidEntityException.class)
     public void updateWithDataIntegrityViolation() throws InvalidEntityException {
-        long id = 100;
+        String code = "WKSP001";
         Workshop workshop = new Workshop();
-        workshop.setId(id);
-        workshop.setCode("test_code");
+        workshop.setCode(code);
 
         Workshop existing = mock(Workshop.class);
-        when(repository.getById(id)).thenReturn(existing);
+        when(repository.getByCode(code)).thenReturn(existing);
         when(repository.update(existing)).thenThrow(new DataIntegrityViolationException(""));
 
         workshopService.update(workshop);
@@ -143,13 +142,12 @@ public class WorkshopServiceImplTest {
 
     @Test
     public void update() throws InvalidEntityException {
-        long id = 100;
+        String code = "WKSP001";
         Workshop workshop = new Workshop();
-        workshop.setId(id);
-        workshop.setCode("test_code");
+        workshop.setCode(code);
 
         Workshop existing = mock(Workshop.class);
-        when(repository.getById(id)).thenReturn(existing);
+        when(repository.getByCode(code)).thenReturn(existing);
         when(repository.update(existing)).thenReturn(existing);
 
         workshopService.update(workshop);
@@ -160,23 +158,10 @@ public class WorkshopServiceImplTest {
 
     @Test
     public void deleteWithExisting() {
-        long id = 100;
         Workshop existing = mock(Workshop.class);
-
-        when(repository.getById(id)).thenReturn(existing);
-        workshopService.delete(id);
+        workshopService.delete(existing);
 
         verify(repository, times(1)).update(existing);
         verify(existing, times(1)).setDeleted(true);
-    }
-
-    @Test
-    public void deleteWithoutExisting() {
-        long id = 100;
-
-        when(repository.getById(id)).thenReturn(null);
-        workshopService.delete(id);
-
-        verify(repository, times(0)).update(any(Workshop.class));
     }
 }

@@ -6,8 +6,7 @@ import java.util.List;
 
 public interface ModelService<T> {
     List<T> list();
-    T fetch(Long id);
     T create(T model) throws InvalidEntityException;
     T update(T model) throws InvalidEntityException;
-    void delete(Long id);
+    void delete(T model);
 }

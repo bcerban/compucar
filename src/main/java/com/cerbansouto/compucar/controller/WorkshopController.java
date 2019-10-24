@@ -24,10 +24,10 @@ public class WorkshopController {
         return service.list();
     }
 
-    @GetMapping(value = "/{id}")
-    public Workshop getWorkshop(@PathVariable("id") Long id) {
-        log.info("getWorkshop {}", id);
-        return service.fetch(id);
+    @GetMapping(value = "/{code}")
+    public Workshop getWorkshop(@PathVariable("code") String code) {
+        log.info("getWorkshop {}", code);
+        return service.fetch(code);
     }
 
     @PostMapping
@@ -42,9 +42,12 @@ public class WorkshopController {
         return service.update(workshop);
     }
 
-    @DeleteMapping(value = "/{id}")
-    public void deleteWorkshop(@PathVariable("id") Long id) {
-        log.info("deleteWorkshop {}", id);
-        service.delete(id);
+    @DeleteMapping(value = "/{code}")
+    public void deleteWorkshop(@PathVariable("code") String code) {
+        log.info("deleteWorkshop {}", code);
+        Workshop model = service.fetch(code);
+        if (model != null) {
+            service.delete(model);
+        }
     }
 }

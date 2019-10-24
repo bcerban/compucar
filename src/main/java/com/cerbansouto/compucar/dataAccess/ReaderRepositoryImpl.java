@@ -30,13 +30,13 @@ public class ReaderRepositoryImpl implements ReaderRepository {
     }
 
     @Override
-    public Reader getById(long id) {
-        return sessionFactory.getCurrentSession().get(Reader.class, id);
+    public Reader getByCode(String code) {
+        return sessionFactory.getCurrentSession().get(Reader.class, code);
     }
 
     @Override
     public Reader create(Reader entity) {
-        long savedId = (long)sessionFactory.getCurrentSession().save(entity);
+        String savedId = (String)sessionFactory.getCurrentSession().save(entity);
         return sessionFactory.getCurrentSession().get(Reader.class, savedId);
     }
 
