@@ -85,7 +85,7 @@ public class ReaderServiceImpl implements ReaderService {
     @Override
     @Transactional
     public Reader update(Reader model) throws InvalidEntityException {
-        log.info(String.format("###### Updating reader with code %d ######", model.getCode()));
+        log.info(String.format("###### Updating reader with code %s ######", model.getCode()));
         validateReader(model);
 
         try {
