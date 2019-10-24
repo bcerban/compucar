@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -29,6 +28,9 @@ public class ServiceServiceImpl implements ServiceService {
     @Autowired
     private ReaderService readerService;
 
+    // TODO: inject via prop
+    private int minimumBatteryLifeRequired = 20;
+
     @Transactional
     @Override
     public Service create(Service service) throws InvalidEntityException {
@@ -38,9 +40,12 @@ public class ServiceServiceImpl implements ServiceService {
         try {
             service.setClient(clientService.fetch(service.getClient().getNumber()));
             service.setMechanic(mechanicService.fetch(service.getMechanic().getNumber()));
-            service.setReader(readerService.fetch(service.getReader().getCode()));
-            service.setWorkshop(service.getReader().getWorkshop());
-            return repository.create(service);
+            Service created = repository.create(service);
+
+            service.getReader().setBatteryUsed(service.getReader().getBatteryUsed() + service.getServiceTime());
+            readerService.update(service.getReader());
+
+            return created;
         } catch (DataIntegrityViolationException e) {
             throw new InvalidEntityException("Could not create service. Please check all information is correct.", e);
         } catch (EntityNotFoundException e) {
@@ -53,6 +58,18 @@ public class ServiceServiceImpl implements ServiceService {
         validateClient(service.getClient());
         validateMechanic(service.getMechanic());
         validateWorkshop(service.getWorkshop());
+        validateReader(service.getReader());
+
+        service.setReader(readerService.fetch(service.getReader().getCode()));
+        if (service.getReader().getRemainingBatteryLife() < minimumBatteryLifeRequired) {
+            throw new InvalidEntityException("Reader is not available at the moment.");
+        }
+
+        if (!service.getReader().getWorkshop().getCode().equals(service.getWorkshop().getCode())) {
+            throw new InvalidEntityException("Reader is not assigned to the requested workshop.");
+        }
+
+        service.setWorkshop(service.getReader().getWorkshop());
     }
 
     private void validateServiceCode(String code) throws InvalidEntityException {

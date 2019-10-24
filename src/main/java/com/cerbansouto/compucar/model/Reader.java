@@ -40,4 +40,8 @@ public class Reader {
     public Reader(String code) {
         this.code = code;
     }
+
+    public int getRemainingBatteryLife() {
+        return batteryLife - batteryUsed;
+    }
 }
