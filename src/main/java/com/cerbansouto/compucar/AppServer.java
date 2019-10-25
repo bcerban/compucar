@@ -13,7 +13,6 @@ import org.springframework.web.servlet.DispatcherServlet;
 
 public class AppServer {
 
-    //TODO: set via config
     private int port = 8081;
     private String contextPath;
     private Class<?> springApplicationContextClass;

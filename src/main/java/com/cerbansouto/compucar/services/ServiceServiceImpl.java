@@ -8,6 +8,7 @@ import com.cerbansouto.compucar.model.*;
 import com.cerbansouto.compucar.services.dataAccess.ServiceRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,11 +30,17 @@ public class ServiceServiceImpl implements ServiceService {
     @Autowired
     private ReaderService readerService;
 
-    // TODO: inject via prop
-    private int minimumBatteryLifeRequired = 20;
-    private int maximumDailyServicesForClient = 1;
-    private int maximumDailyServicesForMechanic = 5;
-    private int minimumMonthlyServicesForDiscount = 5;
+    @Value("${minimum.battery.life.required}")
+    private int minimumBatteryLifeRequired;
+
+    @Value("${maximum.daily.service.for.client}")
+    private int maximumDailyServicesForClient;
+
+    @Value("${maximum.daily.service.for.mechanic}")
+    private int maximumDailyServicesForMechanic;
+
+    @Value("${minimum.monthly.service.for.discount}")
+    private int minimumMonthlyServicesForDiscount;
 
     @Transactional
     @Override
