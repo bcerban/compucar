@@ -47,6 +47,15 @@ public class ServiceRepositoryImpl implements ServiceRepository {
     }
 
     @Override
+    public List<Service> listByMonth(long month) {
+        Query query = sessionFactory.getCurrentSession().createQuery(
+          "FROM Service s WHERE MONTH(s.date) = :month"
+        );
+        query.setParameter("month", month);
+        return query.list();
+    }
+
+    @Override
     public Service getByCode(String code) {
         return sessionFactory.getCurrentSession().get(Service.class, code);
     }

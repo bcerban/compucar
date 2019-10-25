@@ -61,6 +61,11 @@ public class ServiceServiceImpl implements ServiceService {
         }
     }
 
+    @Override
+    public List<Service> getForMonth(long month) {
+        return this.repository.listByMonth(month);
+    }
+
     private void validateService(Service service) throws InvalidEntityException {
         validateServiceCode(service.getCode());
         validateClient(service.getClient());
