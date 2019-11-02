@@ -93,7 +93,7 @@ public class ServiceServiceImpl implements ServiceService {
         }
 
         for (Service s : servicesForMechanic) {
-            if (s.getWorkshop().getCode() != service.getWorkshop().getCode()) {
+            if (!s.getWorkshop().getCode().equals(service.getWorkshop().getCode())) {
                 throw new InvalidEntityException("Mechanic is already assigned to a different workshop.");
             }
         }
