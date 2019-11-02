@@ -34,7 +34,12 @@ public class ServiceRepositoryImpl implements ServiceRepository {
 
     @Override
     public int getCountForClientOnMonth(Client client, Date to) {
-        return 0;
+        Query query = sessionFactory.getCurrentSession().createQuery(
+                "FROM Service s WHERE s.client.number = :client_number AND MONTH(s.date) = MONTH(:date)"
+        );
+        query.setParameter("client_number", client.getNumber());
+        query.setParameter("date", to);
+        return query.list().size();
     }
 
     public List<Service> listByMechanicAndDate(Mechanic mechanic, Date date) {
