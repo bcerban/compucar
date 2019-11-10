@@ -32,28 +32,28 @@ public class WorkshopControllerTest {
     }
 
     @Test
-    public void getWorkshop() {
+    public void getWorkshop() throws UnauthorizedRequestException {
         String code = "WKSP001";
         controller.getWorkshop(code);
         verify(service, times(1)).fetch(code);
     }
 
     @Test
-    public void createClient() throws InvalidEntityException {
+    public void createClient() throws InvalidEntityException, UnauthorizedRequestException {
         Workshop workshop = mock(Workshop.class);
         controller.createWorkshop(workshop);
         verify(service, times(1)).create(workshop);
     }
 
     @Test
-    public void updateClient() throws InvalidEntityException {
+    public void updateClient() throws InvalidEntityException, UnauthorizedRequestException {
         Workshop workshop = mock(Workshop.class);
         controller.updateWorkshop(workshop);
         verify(service, times(1)).update(workshop);
     }
 
     @Test
-    public void delete() {
+    public void delete() throws UnauthorizedRequestException {
         String code = "WKSP001";
         Workshop existing = mock(Workshop.class);
 
