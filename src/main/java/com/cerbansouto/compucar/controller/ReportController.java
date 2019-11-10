@@ -1,6 +1,7 @@
 package com.cerbansouto.compucar.controller;
 
 import com.cerbansouto.compucar.api.ServiceService;
+import com.cerbansouto.compucar.api.UnauthorizedRequestException;
 import com.cerbansouto.compucar.model.Service;
 import org.eclipse.jetty.server.Request;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +20,12 @@ public class ReportController {
     private ServiceService serviceService;
 
     @RequestMapping(value = "/service", method = RequestMethod.GET)
-    public String serviceReports() {
+    public String serviceReports() throws UnauthorizedRequestException {
         return "reports/service";
     }
 
     @RequestMapping(value = "/queryReports", method = RequestMethod.POST)
-    public String queryServices(Model model, Request request) {
+    public String queryServices(Model model, Request request) throws UnauthorizedRequestException {
         long month = Long.parseLong(request.getParameter("month"));
         List<Service> services = this.serviceService.getForMonth(month);
         model.addAttribute("services", services);

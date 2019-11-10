@@ -1,6 +1,7 @@
 package com.cerbansouto.compucar.controller;
 
 import com.cerbansouto.compucar.api.ServiceService;
+import com.cerbansouto.compucar.api.UnauthorizedRequestException;
 import com.cerbansouto.compucar.model.Service;
 import com.cerbansouto.compucar.services.InvalidEntityException;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +17,7 @@ public class ServiceController {
     private ServiceService service;
 
     @PostMapping
-    public Service createService(@RequestBody Service service) throws InvalidEntityException {
+    public Service createService(@RequestBody Service service) throws InvalidEntityException, UnauthorizedRequestException {
         log.info("createService with  {}", service);
         return this.service.create(service);
     }
