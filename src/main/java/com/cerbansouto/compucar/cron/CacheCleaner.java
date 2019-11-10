@@ -13,7 +13,7 @@ public class CacheCleaner {
     @Autowired
     private CacheEvictor cacheEvictor;
 
-    @Scheduled(cron = "* */4 * * * ?")
+    @Scheduled(cron = "* * */4 * * ?")
     public void action() {
         try {
             log.info("###### Beginning cache clearing process ######");
