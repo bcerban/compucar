@@ -1,6 +1,7 @@
 package com.cerbansouto.compucar.controller;
 
 import com.cerbansouto.compucar.api.MechanicService;
+import com.cerbansouto.compucar.api.UnauthorizedRequestException;
 import com.cerbansouto.compucar.model.Mechanic;
 import com.cerbansouto.compucar.services.InvalidEntityException;
 import lombok.extern.slf4j.Slf4j;
@@ -18,27 +19,27 @@ public class MechanicController {
     private MechanicService service;
 
     @GetMapping
-    public List<Mechanic> getAll() {
+    public List<Mechanic> getAll() throws UnauthorizedRequestException {
         return service.list();
     }
 
     @GetMapping(value = "/{id}")
-    public Mechanic get(@PathVariable("id") long id) {
+    public Mechanic get(@PathVariable("id") long id) throws UnauthorizedRequestException {
         return service.fetch(id);
     }
 
     @PostMapping
-    public Mechanic create(@RequestBody Mechanic mechanic) throws InvalidEntityException {
+    public Mechanic create(@RequestBody Mechanic mechanic) throws InvalidEntityException, UnauthorizedRequestException {
         return service.create(mechanic);
     }
 
     @PutMapping
-    public Mechanic update(@RequestBody Mechanic mechanic) throws InvalidEntityException {
+    public Mechanic update(@RequestBody Mechanic mechanic) throws InvalidEntityException, UnauthorizedRequestException {
         return service.update(mechanic);
     }
 
     @DeleteMapping(value = "{id}")
-    public void deleteMechanic(@PathVariable("id") long id) {
+    public void deleteMechanic(@PathVariable("id") long id) throws UnauthorizedRequestException {
         log.info("deleteMechanic {}", id);
         Mechanic model = service.fetch(id);
         if (model != null) {

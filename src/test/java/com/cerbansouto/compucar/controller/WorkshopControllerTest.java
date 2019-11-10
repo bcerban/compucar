@@ -1,5 +1,6 @@
 package com.cerbansouto.compucar.controller;
 
+import com.cerbansouto.compucar.api.UnauthorizedRequestException;
 import com.cerbansouto.compucar.api.WorkshopService;
 import com.cerbansouto.compucar.model.Workshop;
 import com.cerbansouto.compucar.services.InvalidEntityException;
@@ -25,7 +26,7 @@ public class WorkshopControllerTest {
     }
 
     @Test
-    public void list() {
+    public void list() throws UnauthorizedRequestException {
         controller.list();
         verify(service, times(1)).list();
     }

@@ -1,5 +1,6 @@
 package com.cerbansouto.compucar.controller;
 
+import com.cerbansouto.compucar.api.UnauthorizedRequestException;
 import com.cerbansouto.compucar.api.WorkshopService;
 import com.cerbansouto.compucar.model.Client;
 import com.cerbansouto.compucar.model.Workshop;
@@ -19,31 +20,31 @@ public class WorkshopController {
     private WorkshopService service;
 
     @GetMapping
-    public List<Workshop> list() {
+    public List<Workshop> list() throws UnauthorizedRequestException {
         log.info("list");
         return service.list();
     }
 
     @GetMapping(value = "/{code}")
-    public Workshop getWorkshop(@PathVariable("code") String code) {
+    public Workshop getWorkshop(@PathVariable("code") String code) throws UnauthorizedRequestException  {
         log.info("getWorkshop {}", code);
         return service.fetch(code);
     }
 
     @PostMapping
-    public Workshop createWorkshop(@RequestBody Workshop workshop) throws InvalidEntityException {
+    public Workshop createWorkshop(@RequestBody Workshop workshop) throws InvalidEntityException, UnauthorizedRequestException {
         log.info("createWorkshop with  {}", workshop);
         return service.create(workshop);
     }
 
     @PutMapping
-    public Workshop updateWorkshop(@RequestBody Workshop workshop) throws InvalidEntityException {
+    public Workshop updateWorkshop(@RequestBody Workshop workshop) throws InvalidEntityException, UnauthorizedRequestException {
         log.info("updateClient with  {}", workshop);
         return service.update(workshop);
     }
 
     @DeleteMapping(value = "/{code}")
-    public void deleteWorkshop(@PathVariable("code") String code) {
+    public void deleteWorkshop(@PathVariable("code") String code) throws UnauthorizedRequestException  {
         log.info("deleteWorkshop {}", code);
         Workshop model = service.fetch(code);
         if (model != null) {

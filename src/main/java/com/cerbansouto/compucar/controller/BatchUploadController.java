@@ -34,7 +34,7 @@ public class BatchUploadController {
     private ServiceService serviceService;
 
     @PostMapping
-    public BatchUploadResult createBatch(@RequestBody BatchUploadRequest batch) {
+    public BatchUploadResult createBatch(@RequestBody BatchUploadRequest batch) throws UnauthorizedRequestException {
         log.info("createBatch with");
 
         List<String> messages = new ArrayList<>();

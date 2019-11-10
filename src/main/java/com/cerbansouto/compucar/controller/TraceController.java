@@ -2,6 +2,7 @@ package com.cerbansouto.compucar.controller;
 
 import com.cerbansouto.compucar.api.ServiceService;
 import com.cerbansouto.compucar.api.TraceService;
+import com.cerbansouto.compucar.api.UnauthorizedRequestException;
 import com.cerbansouto.compucar.model.Service;
 import com.cerbansouto.compucar.model.Trace;
 import com.cerbansouto.compucar.services.InvalidEntityException;
@@ -26,7 +27,7 @@ public class TraceController {
             @RequestParam(value = "from", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
             @RequestParam(value = "to", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date to,
             @RequestParam(value = "sort", required = false) String sort
-    ) {
+    ) throws UnauthorizedRequestException {
         log.info("list");
         return service.list(from, to, sort);
     }
