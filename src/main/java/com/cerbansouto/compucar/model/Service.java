@@ -7,6 +7,8 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.EventListener;
+import java.util.List;
 
 @Data
 @Entity
@@ -49,6 +51,9 @@ public class Service {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn //(name = "workshop", referencedColumnName = "code")
     private Workshop workshop;
+
+    @Transient
+    private List<ServiceEvent> events;
 
     @JsonIgnore
     @Column

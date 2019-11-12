@@ -1,6 +1,7 @@
 package com.cerbansouto.compucar.controller;
 
 import com.cerbansouto.compucar.api.ClientService;
+import com.cerbansouto.compucar.api.UnauthorizedRequestException;
 import com.cerbansouto.compucar.model.Client;
 import com.cerbansouto.compucar.services.InvalidEntityException;
 import lombok.extern.slf4j.Slf4j;
@@ -18,31 +19,31 @@ public class ClientController {
     private ClientService service;
 
     @GetMapping
-    public List<Client> list() {
+    public List<Client> list() throws UnauthorizedRequestException {
         log.info("list");
         return service.list();
     }
 
     @GetMapping(value = "/{id}")
-    public Client getClient(@PathVariable("id") Long id) {
+    public Client getClient(@PathVariable("id") Long id) throws UnauthorizedRequestException {
         log.info("getClient {}", id);
         return service.fetch(id);
     }
 
     @PostMapping
-    public Client createClient(@RequestBody Client client) throws InvalidEntityException {
+    public Client createClient(@RequestBody Client client) throws InvalidEntityException, UnauthorizedRequestException {
         log.info("createClient with  {}", client);
         return service.create(client);
     }
 
     @PutMapping
-    public Client updateClient(@RequestBody Client client) throws InvalidEntityException {
+    public Client updateClient(@RequestBody Client client) throws InvalidEntityException, UnauthorizedRequestException {
         log.info("updateClient with  {}", client);
         return service.update(client);
     }
 
     @DeleteMapping(value = "/{id}")
-    public void deleteClient(@PathVariable("id") Long id) {
+    public void deleteClient(@PathVariable("id") Long id) throws UnauthorizedRequestException {
         log.info("deleteClient {}", id);
         Client model = service.fetch(id);
         if (model != null) {

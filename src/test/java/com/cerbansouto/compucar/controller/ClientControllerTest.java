@@ -1,6 +1,7 @@
 package com.cerbansouto.compucar.controller;
 
 import com.cerbansouto.compucar.api.ClientService;
+import com.cerbansouto.compucar.api.UnauthorizedRequestException;
 import com.cerbansouto.compucar.model.Client;
 import com.cerbansouto.compucar.services.InvalidEntityException;
 import org.junit.Before;
@@ -25,34 +26,34 @@ public class ClientControllerTest {
     }
 
     @Test
-    public void list() {
+    public void list() throws UnauthorizedRequestException {
         controller.list();
         verify(service, times(1)).list();
     }
 
     @Test
-    public void getClient() {
+    public void getClient() throws UnauthorizedRequestException {
         long id = 100;
         controller.getClient(id);
         verify(service, times(1)).fetch(id);
     }
 
     @Test
-    public void createClient() throws InvalidEntityException {
+    public void createClient() throws InvalidEntityException, UnauthorizedRequestException {
         Client client = mock(Client.class);
         controller.createClient(client);
         verify(service, times(1)).create(client);
     }
 
     @Test
-    public void updateClient() throws InvalidEntityException {
+    public void updateClient() throws InvalidEntityException, UnauthorizedRequestException {
         Client client = mock(Client.class);
         controller.updateClient(client);
         verify(service, times(1)).update(client);
     }
 
     @Test
-    public void delete() {
+    public void delete() throws UnauthorizedRequestException {
         long clientId = 100;
         Client existingClient = mock(Client.class);
 

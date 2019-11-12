@@ -5,6 +5,8 @@ import com.cerbansouto.compucar.model.Workshop;
 import com.cerbansouto.compucar.services.dataAccess.WorkshopRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +19,7 @@ public class WorkshopServiceImpl implements WorkshopService {
     @Autowired
     private WorkshopRepository repository;
 
+    @Cacheable("workshops")
     @Transactional
     @Override
     public List<Workshop> list() {
@@ -24,6 +27,7 @@ public class WorkshopServiceImpl implements WorkshopService {
         return repository.findAll();
     }
 
+    @Cacheable("workshop")
     @Override
     @Transactional
     public Workshop fetch(String code) {
@@ -37,6 +41,7 @@ public class WorkshopServiceImpl implements WorkshopService {
         return found;
     }
 
+    @CacheEvict(value = "workshops", allEntries = true)
     @Transactional
     @Override
     public Workshop create(Workshop model) throws InvalidEntityException {
@@ -50,6 +55,7 @@ public class WorkshopServiceImpl implements WorkshopService {
         }
     }
 
+    @CacheEvict(value = "workshops", allEntries = true)
     @Transactional
     @Override
     public Workshop update(Workshop model) throws InvalidEntityException {
@@ -67,6 +73,7 @@ public class WorkshopServiceImpl implements WorkshopService {
         }
     }
 
+    @CacheEvict(value = "workshops", allEntries = true)
     @Transactional
     @Override
     public void delete(Workshop model) {

@@ -30,6 +30,9 @@ public class ServiceServiceImpl implements ServiceService {
     @Autowired
     private ReaderService readerService;
 
+    @Autowired
+    private EventService eventService;
+
     @Value("${minimum.battery.life.required}")
     private int minimumBatteryLifeRequired;
 
@@ -52,6 +55,12 @@ public class ServiceServiceImpl implements ServiceService {
             Service created = repository.create(service);
             service.getReader().setBatteryUsed(service.getReader().getBatteryUsed() + service.getServiceTime());
             readerService.update(service.getReader());
+
+            // TODO: move this to a new thread
+            created.getEvents().forEach(e -> {
+                e.setServiceCode(created.getCode());
+                eventService.create(e);
+            });
 
             return created;
         } catch (DataIntegrityViolationException e) {

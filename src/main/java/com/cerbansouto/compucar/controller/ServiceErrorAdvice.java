@@ -1,6 +1,7 @@
 package com.cerbansouto.compucar.controller;
 
 import com.cerbansouto.compucar.api.ServiceError;
+import com.cerbansouto.compucar.api.UnauthorizedRequestException;
 import com.cerbansouto.compucar.services.InvalidEntityException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,13 @@ public class ServiceErrorAdvice {
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     ServiceError entityNotFoundHandler(EntityNotFoundException e) {
+        return processException(e);
+    }
+
+    @ResponseBody
+    @ExceptionHandler(UnauthorizedRequestException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    ServiceError entityNotFoundHandler(UnauthorizedRequestException e) {
         return processException(e);
     }
 

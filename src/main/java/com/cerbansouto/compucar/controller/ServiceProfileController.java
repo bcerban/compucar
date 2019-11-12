@@ -2,6 +2,7 @@ package com.cerbansouto.compucar.controller;
 
 import com.cerbansouto.compucar.api.ProfileService;
 import com.cerbansouto.compucar.api.TraceService;
+import com.cerbansouto.compucar.api.UnauthorizedRequestException;
 import com.cerbansouto.compucar.model.ProfileReport;
 import com.cerbansouto.compucar.model.Trace;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +27,7 @@ public class ServiceProfileController {
     @GetMapping
     public ProfileReport report(
             @RequestParam(value = "date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date
-    ) {
+    ) throws UnauthorizedRequestException {
         log.info("generateReport");
         return service.generate(date);
     }

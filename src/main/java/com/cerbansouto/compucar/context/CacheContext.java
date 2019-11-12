@@ -1,6 +1,7 @@
 package com.cerbansouto.compucar.context;
 
 import com.cerbansouto.compucar.cache.TimeoutCacheManager;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -11,9 +12,15 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 @EnableCaching
 public class CacheContext {
-    private long cacheTimeout = 240;
-    private String timeUnit = "MINUTES";
-    private long cacheMaximunSize = 100;
+
+    @Value("${cache.timeout}")
+    private long cacheTimeout; // = 240;
+
+    @Value("${cache.timeout.unit}")
+    private String timeUnit; // = "MINUTES";
+
+    @Value("${cache.max.size}")
+    private long cacheMaximunSize; // = 100;
 
     @Bean
     public CacheManager cacheManager() {

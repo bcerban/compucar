@@ -1,6 +1,7 @@
 package com.cerbansouto.compucar.tracing;
 
 import com.cerbansouto.compucar.api.TraceService;
+import com.cerbansouto.compucar.api.UnauthorizedRequestException;
 import com.cerbansouto.compucar.model.Trace;
 import com.cerbansouto.compucar.services.InvalidEntityException;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +11,7 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -29,9 +31,13 @@ public class RestTracingAspect {
     }
 
     @Before("controller()")
-    public void traceRestRequest(JoinPoint joinPoint) {
+    public void traceRestRequest(JoinPoint joinPoint) throws UnauthorizedRequestException {
         log.info("###### Tracing request ######");
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+        String username = request.getHeader(TraceService.USERNAME_HEADER);
+        if (!StringUtils.hasText(username)) {
+            throw new UnauthorizedRequestException("Please provide a valid username");
+        }
 
         Trace trace = new Trace();
         trace.setDate(new Date());
