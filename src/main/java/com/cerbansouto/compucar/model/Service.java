@@ -1,19 +1,18 @@
 package com.cerbansouto.compucar.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.EventListener;
-import java.util.List;
+import java.io.Serializable;
+import java.util.*;
 
 @Data
+@EqualsAndHashCode(exclude = "diagnoses")
 @Entity
 @Table(name = "service")
-public class Service {
+public class Service implements Serializable {
 
     @Id
     @Column(length = 100)
@@ -31,29 +30,32 @@ public class Service {
     @JsonProperty(value = "clientCode")
     @JsonIdentityReference(alwaysAsId = true)
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn //(name = "client", referencedColumnName = "number")
+    @JoinColumn
     private Client client;
 
     @JsonProperty(value = "mechanicCode")
     @JsonIdentityReference(alwaysAsId = true)
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn //(name = "mechanic", referencedColumnName = "number")
+    @JoinColumn
     private Mechanic mechanic;
 
     @JsonProperty(value = "readerCode")
     @JsonIdentityReference(alwaysAsId = true)
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn //(name = "reader", referencedColumnName = "code")
+    @JoinColumn
     private Reader reader;
 
     @JsonProperty(value = "workshopCode")
     @JsonIdentityReference(alwaysAsId = true)
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn //(name = "workshop", referencedColumnName = "code")
+    @JoinColumn
     private Workshop workshop;
 
     @Transient
     private List<ServiceEvent> events;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "service")
+    private Set<EventDiagnosis> diagnoses = new HashSet<>();
 
     @JsonIgnore
     @Column

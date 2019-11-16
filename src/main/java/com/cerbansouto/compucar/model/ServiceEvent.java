@@ -1,11 +1,11 @@
 package com.cerbansouto.compucar.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class ServiceEvent {
-    @JsonIgnore
+public class ServiceEvent implements Serializable {
     private String serviceCode;
     private String name;
     private String payload;

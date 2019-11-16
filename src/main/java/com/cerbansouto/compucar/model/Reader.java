@@ -4,12 +4,13 @@ import com.fasterxml.jackson.annotation.*;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Data
 @Entity
 @Table(name = "reader")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Reader {
+public class Reader implements Serializable {
 
     @Id
     @Column(length = 100, unique = true, nullable = false)
