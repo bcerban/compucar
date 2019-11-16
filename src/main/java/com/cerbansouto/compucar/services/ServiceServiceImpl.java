@@ -33,6 +33,9 @@ public class ServiceServiceImpl implements ServiceService {
     @Autowired
     private EventService eventService;
 
+    @Autowired
+    private ServicePublisher publisher;
+
     @Value("${minimum.battery.life.required}")
     private int minimumBatteryLifeRequired;
 
@@ -44,6 +47,17 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Value("${minimum.monthly.service.for.discount}")
     private int minimumMonthlyServicesForDiscount;
+
+    @Transactional
+    @Override
+    public Service fetch(String code) throws EntityNotFoundException {
+        Service found = repository.getByCode(code);
+        if (found == null || found.isDeleted()) {
+            throw new EntityNotFoundException(String.format("No service with code %s", code));
+        }
+
+        return found;
+    }
 
     @Transactional
     @Override
@@ -61,6 +75,9 @@ public class ServiceServiceImpl implements ServiceService {
                 e.setServiceCode(created.getCode());
                 eventService.create(e);
             });
+
+            // TODO: move this to a new thread
+            publisher.publish(created);
 
             return created;
         } catch (DataIntegrityViolationException e) {

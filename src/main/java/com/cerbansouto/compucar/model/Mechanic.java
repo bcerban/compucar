@@ -5,12 +5,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Data
 @Entity
 @Table(name = "mechanic")
-public class Mechanic {
+public class Mechanic implements Serializable {
 
     @Id
     @Column(unique = true, nullable = false)

@@ -9,6 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 @Slf4j
 @Service
 public class EventService {
@@ -23,8 +27,9 @@ public class EventService {
 
     public void create(ServiceEvent event) {
         try {
+            String createUrl = String.format("%s%s", url, eventsEndpoint);
             HttpEntity<ServiceEvent> response = restTemplate.postForEntity(
-                    String.format("%s%s", url, eventsEndpoint),
+                    createUrl,
                     new HttpEntity<>(event),
                     ServiceEvent.class
             );
@@ -37,5 +42,25 @@ public class EventService {
         } catch (RestClientException e) {
             log.error(e.getMessage(), e);
         }
+    }
+
+    public List<String> fetchEventNames(String serviceCode) {
+        List<String> names = new ArrayList<>();
+
+        try {
+            HttpEntity<String[]> response = restTemplate.getForEntity(
+                    String.format("%s%s/%s", url, eventsEndpoint, serviceCode),
+                    String[].class
+            );
+
+            if (response.getBody() != null) {
+                log.info("Fetched event names for {}", serviceCode);
+                names = Arrays.asList(response.getBody());
+            }
+        } catch (RestClientException e) {
+            log.error(e.getMessage(), e);
+        }
+
+        return names;
     }
 }
