@@ -13,4 +13,4 @@ El código del sistema repositorio puede encontrarse en https://github.com/bcerb
 
 ## Sistema Worker
 
-TODO
+El código del sistema worker puede encontrarse en https://github.com/bcerban/compucar-workers.
