@@ -21,9 +21,9 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
-@Aspect
+//@Aspect
 @Slf4j
-@Component
+//@Component
 public class ServiceProfilingAspect {
 
     @Autowired
@@ -40,7 +40,12 @@ public class ServiceProfilingAspect {
         long start = System.currentTimeMillis();
 
         Object result = joinPoint.proceed();
-        saveProfile(joinPoint, start);
+
+        try {
+            saveProfile(joinPoint, start);
+        } catch (Exception e) {
+            log.error("Failed to dave profile", e);
+        }
 
         return result;
     }
