@@ -21,7 +21,7 @@ public class TraceRepositoryImpl implements TraceRepository {
 
     @Override
     public List<Trace> findAll() {
-        return sessionFactory.getCurrentSession().createQuery("FROM Trace t").list();
+        return sessionFactory.getCurrentSession().createQuery("FROM Trace t ORDER BY t.date DESC").list();
     }
 
     @Override
