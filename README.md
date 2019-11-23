@@ -5,7 +5,7 @@ Obligatorios para Arquitecturas livianas en Java, Universidad ORT Uruguay.
 
 ## Sistema de monitoreo
 
-TODO
+El código del sistema repositorio puede encontrarse en https://github.com/bcerban/compucar-monitor.
 
 ## Sistema Repositorio
 
