@@ -52,7 +52,7 @@ public class Service implements Serializable {
     private Workshop workshop;
 
     @Transient
-    private List<ServiceEvent> events;
+    private List<ServiceEvent> events = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "service")
     private Set<EventDiagnosis> diagnoses = new HashSet<>();

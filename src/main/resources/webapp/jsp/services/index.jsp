@@ -36,6 +36,11 @@
         </c:forEach>
         </tbody>
     </table>
+    <form action="services/pdf" method="post">
+        <input type="hidden" value="${month}" name="month"/>
+        <input type="submit" value="Generate PDF" />
+    </form>
+
 </div>
 </body>
 </html>
