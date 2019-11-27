@@ -6,13 +6,15 @@
 <html>
 <body>
 <div>
-    <h1>Services reports</h1>
-    <form action="services" method="post">
-        <label for="month">Services for month</label>
+    <h1>Reader reports</h1>
+    <form action="readers" method="post">
+        <input type="text" name="readerCode" placeholder="Reader code"/>
         <br/>
-        <input type="text" name="month" placeholder="Ex: 1 (January)"/>
+        <input type="date" name="from" placeholder="From date"/>
         <br/>
-        <input type="submit" value="Check services for month"/>
+        <input type="date" name="to" placeholder="To date"/>
+        <br/>
+        <input type="submit" value="Check services"/>
     </form>
 </div>
 
@@ -37,9 +39,9 @@
                 <td>
                     <table>
                         <tbody>
-                            <c:forEach var="event" items="${service.events}">
-                                <tr><td>${event.name}</td></tr>
-                            </c:forEach>
+                        <c:forEach var="event" items="${service.events}">
+                            <tr><td>${event.name}</td></tr>
+                        </c:forEach>
                         </tbody>
                     </table>
                 </td>
@@ -48,8 +50,8 @@
                         <tbody>
                         <c:forEach var="diagnosis" items="${service.diagnoses}">
                             </tr>
-                                <td>${diagnosis.eventName}</td>
-                                <td>${diagnosis.result}</td>
+                            <td>${diagnosis.eventName}</td>
+                            <td>${diagnosis.result}</td>
                             </tr>
                         </c:forEach>
                         </tbody>

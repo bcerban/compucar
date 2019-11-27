@@ -1,5 +1,6 @@
 package com.cerbansouto.compucar.api;
 
+import com.cerbansouto.compucar.model.Reader;
 import com.cerbansouto.compucar.model.Service;
 import com.cerbansouto.compucar.services.InvalidEntityException;
 
@@ -12,4 +13,5 @@ public interface ServiceService {
     Service create(Service service) throws InvalidEntityException;
     List<Service> getForMonth(int month);
     List<Service> getForRange(Date from, Date to);
+    List<Service> getForRangeAndReader(Reader reader, Date from, Date to);
 }

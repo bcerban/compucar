@@ -105,6 +105,14 @@ public class ServiceServiceImpl implements ServiceService {
         return services;
     }
 
+    @Transactional
+    @Override
+    public List<Service> getForRangeAndReader(Reader reader, Date from, Date to) {
+        List<Service> services = repository.listByReaderAndDateRange(reader, from, to);
+        services.forEach(s -> s.setEvents(eventService.fetchEvents(s.getCode())));
+        return services;
+    }
+
     private void validateService(Service service) throws InvalidEntityException {
         validateServiceCode(service.getCode());
         validateClient(service.getClient());

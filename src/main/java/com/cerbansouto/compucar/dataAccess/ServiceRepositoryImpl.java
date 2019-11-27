@@ -2,6 +2,7 @@ package com.cerbansouto.compucar.dataAccess;
 
 import com.cerbansouto.compucar.model.Client;
 import com.cerbansouto.compucar.model.Mechanic;
+import com.cerbansouto.compucar.model.Reader;
 import com.cerbansouto.compucar.model.Service;
 import com.cerbansouto.compucar.services.dataAccess.ServiceRepository;
 import org.hibernate.SessionFactory;
@@ -65,6 +66,17 @@ public class ServiceRepositoryImpl implements ServiceRepository {
         Query query = sessionFactory.getCurrentSession().createQuery(
                 "FROM Service s WHERE s.date >= :fromDate AND s.date <= :toDate"
         );
+        query.setParameter("fromDate", from);
+        query.setParameter("toDate", to);
+        return query.list();
+    }
+
+    @Override
+    public List<Service> listByReaderAndDateRange(Reader reader, Date from, Date to) {
+        Query query = sessionFactory.getCurrentSession().createQuery(
+                "FROM Service s WHERE s.reader.code = :code AND s.date >= :fromDate AND s.date <= :toDate"
+        );
+        query.setParameter("code", reader.getCode());
         query.setParameter("fromDate", from);
         query.setParameter("toDate", to);
         return query.list();

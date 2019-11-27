@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Data
 @EqualsAndHashCode(exclude = "diagnoses")
