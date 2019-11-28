@@ -8,7 +8,11 @@ import com.cerbansouto.compucar.model.Service;
 import com.cerbansouto.compucar.services.InvalidEntityException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -20,6 +24,15 @@ public class ServiceController {
 
     @Autowired
     private EventDiagnosisService diagnosisService;
+
+    @GetMapping
+    public List<Service> listServices(
+            @RequestParam(value = "from") @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
+            @RequestParam(value = "to") @DateTimeFormat(pattern = "yyyy-MM-dd") Date to
+    ) {
+        log.info("listServices from {} to {}", from, to);
+        return service.getForRange(from, to);
+    }
 
     @GetMapping(value = "/{serviceCode}")
     public Service getService(@PathVariable String serviceCode) {
