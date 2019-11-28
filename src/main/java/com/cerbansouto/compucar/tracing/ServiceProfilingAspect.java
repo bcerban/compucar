@@ -21,9 +21,9 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
-//@Aspect
+@Aspect
 @Slf4j
-//@Component
+@Component
 public class ServiceProfilingAspect {
 
     @Autowired
@@ -33,6 +33,7 @@ public class ServiceProfilingAspect {
     private ProfileRepository repository;
 
     @Around("execution(* com.cerbansouto.compucar.services.*.*(..) ) " +
+            "&& !execution(* com.cerbansouto.compucar.services.BeanReporterServiceImpl.*(..) ) " +
             "&& !execution(* com.cerbansouto.compucar.services.ProfileServiceImpl.*(..) ) " +
             "&& !execution(* com.cerbansouto.compucar.services.TraceServiceImpl.*(..) )")
     public Object profileService(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -44,7 +45,7 @@ public class ServiceProfilingAspect {
         try {
             saveProfile(joinPoint, start);
         } catch (Exception e) {
-            log.error("Failed to dave profile", e);
+            log.error("Failed to save profile", e);
         }
 
         return result;

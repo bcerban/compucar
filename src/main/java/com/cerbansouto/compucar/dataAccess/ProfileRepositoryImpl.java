@@ -8,6 +8,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.NoResultException;
 import java.util.Date;
@@ -98,6 +99,7 @@ public class ProfileRepositoryImpl implements ProfileRepository {
                         "(SELECT MIN(p2.numInvocations) FROM Profile p2 WHERE DATE(p2.date) = :date)"
         );
         query.setParameter("date", date);
+        query.setMaxResults(1);
 
         try {
             return (Profile)query.getSingleResult();
@@ -113,6 +115,7 @@ public class ProfileRepositoryImpl implements ProfileRepository {
                         "(SELECT MAX(p2.numInvocations) FROM Profile p2 WHERE DATE(p2.date) = :date)"
         );
         query.setParameter("date", date);
+        query.setMaxResults(1);
 
         try {
             return (Profile)query.getSingleResult();
@@ -128,6 +131,7 @@ public class ProfileRepositoryImpl implements ProfileRepository {
                         "(SELECT MIN(p2.averageResponseTime) FROM Profile p2 WHERE DATE(p2.date) = :date)"
         );
         query.setParameter("date", date);
+        query.setMaxResults(1);
 
         try {
             return (Profile)query.getSingleResult();
@@ -143,6 +147,7 @@ public class ProfileRepositoryImpl implements ProfileRepository {
                         "(SELECT MAX(p2.averageResponseTime) FROM Profile p2 WHERE DATE(p2.date) = :date)"
         );
         query.setParameter("date", date);
+        query.setMaxResults(1);
 
         try {
             return (Profile)query.getSingleResult();
@@ -151,12 +156,14 @@ public class ProfileRepositoryImpl implements ProfileRepository {
         }
     }
 
+    @Transactional
     @Override
     public Profile create(Profile profile) {
         long id = (long)sessionFactory.getCurrentSession().save(profile);
         return this.getById(id);
     }
 
+    @Transactional
     @Override
     public Profile update(Profile profile) {
         sessionFactory.getCurrentSession().update(profile);
