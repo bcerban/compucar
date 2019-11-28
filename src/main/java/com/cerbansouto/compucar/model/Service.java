@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Data
 @EqualsAndHashCode(exclude = "diagnoses")
@@ -52,7 +53,7 @@ public class Service implements Serializable {
     private Workshop workshop;
 
     @Transient
-    private List<ServiceEvent> events;
+    private List<ServiceEvent> events = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "service")
     private Set<EventDiagnosis> diagnoses = new HashSet<>();

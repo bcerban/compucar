@@ -13,6 +13,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -56,6 +57,7 @@ public class ServiceServiceImpl implements ServiceService {
             throw new EntityNotFoundException(String.format("No service with code %s", code));
         }
 
+        found.setEvents(eventService.fetchEvents(found.getCode()));
         return found;
     }
 
@@ -87,9 +89,28 @@ public class ServiceServiceImpl implements ServiceService {
         }
     }
 
+    @Transactional
     @Override
-    public List<Service> getForMonth(long month) {
-        return this.repository.listByMonth(month);
+    public List<Service> getForMonth(int month) {
+        List<Service> services = repository.listByMonth(month);
+        services.forEach(s -> s.setEvents(eventService.fetchEvents(s.getCode())));
+        return services;
+    }
+
+    @Transactional
+    @Override
+    public List<Service> getForRange(Date from, Date to) {
+        List<Service> services = repository.listByDateRange(from, to);
+        services.forEach(s -> s.setEvents(eventService.fetchEvents(s.getCode())));
+        return services;
+    }
+
+    @Transactional
+    @Override
+    public List<Service> getForRangeAndReader(Reader reader, Date from, Date to) {
+        List<Service> services = repository.listByReaderAndDateRange(reader, from, to);
+        services.forEach(s -> s.setEvents(eventService.fetchEvents(s.getCode())));
+        return services;
     }
 
     private void validateService(Service service) throws InvalidEntityException {

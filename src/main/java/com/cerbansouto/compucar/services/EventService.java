@@ -44,6 +44,27 @@ public class EventService {
         }
     }
 
+    public List<ServiceEvent> fetchEvents(String serviceCode) {
+        List<ServiceEvent> events = new ArrayList<>();
+        List<String> names = fetchEventNames(serviceCode);
+        names.forEach(name -> {
+            try {
+                HttpEntity<ServiceEvent> response = restTemplate.getForEntity(
+                        String.format("%s%s/%s/name/%s", url, eventsEndpoint, serviceCode, name),
+                        ServiceEvent.class
+                );
+
+                if (response.getBody() != null) {
+                    events.add(response.getBody());
+                }
+            } catch (RestClientException e) {
+                log.error(e.getMessage(), e);
+            }
+        });
+
+        return events;
+    }
+
     public List<String> fetchEventNames(String serviceCode) {
         List<String> names = new ArrayList<>();
 
