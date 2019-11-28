@@ -14,9 +14,11 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.persistence.EntityNotFoundException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -38,11 +40,7 @@ public class ReportController {
     @RequestMapping(value = "/services", method = RequestMethod.POST)
     public String queryServices(Model model, Request request) throws UnauthorizedRequestException {
         if (StringUtils.hasText(request.getParameter("month"))) {
-            log.info("Requesting services for month {}", request.getParameter("month"));
-            int month = Integer.parseInt(request.getParameter("month"));
-            List<Service> services = serviceService.getForMonth(month);
-            model.addAttribute("services", services);
-            model.addAttribute("month", month);
+            processServiceRequest(model, request);
         }
 
         return "services/index";
@@ -51,13 +49,18 @@ public class ReportController {
     @RequestMapping(value = "/services/pdf", method = RequestMethod.POST)
     public String generatePdf(Model model, Request request) throws UnauthorizedRequestException {
         if (StringUtils.hasText(request.getParameter("month"))) {
-            int month = Integer.parseInt(request.getParameter("month"));
-            List<Service> services = serviceService.getForMonth(month);
-            model.addAttribute("services", services);
+            processServiceRequest(model, request);
             return "pdfReportView";
         }
 
         return "redirect:/reports/services";
+    }
+
+    private void processServiceRequest(Model model, Request request) {
+        int month = Integer.parseInt(request.getParameter("month"));
+        List<Service> services = serviceService.getForMonth(month);
+        model.addAttribute("services", services);
+        model.addAttribute("month", month);
     }
 
     @RequestMapping(value = "/readers", method = RequestMethod.GET)
@@ -68,15 +71,11 @@ public class ReportController {
     @RequestMapping(value = "/readers", method = RequestMethod.POST)
     public String queryReaders(Model model, Request request) throws UnauthorizedRequestException {
         if (StringUtils.hasText(request.getParameter("readerCode"))) {
-            Reader reader = readerService.fetch(request.getParameter("readerCode"));
 
             try {
-                // TODO: Read real dates
-                DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                List<Service> services = serviceService.getForRangeAndReader(reader, format.parse("2019-11-01"), format.parse("2019-11-30"));
-                model.addAttribute("services", services);
-                model.addAttribute("readerCode", reader.getCode());
-            } catch (ParseException e) {
+                Reader reader = readerService.fetch(request.getParameter("readerCode"));
+                processReaderRequest(model, request, reader);
+            } catch (EntityNotFoundException | ParseException e) {
                 log.error(e.getMessage(), e);
             }
         }
@@ -87,14 +86,10 @@ public class ReportController {
     @RequestMapping(value = "/readers/pdf", method = RequestMethod.POST)
     public String generatePdfByReader(Model model, Request request) throws UnauthorizedRequestException {
         if (StringUtils.hasText(request.getParameter("readerCode"))) {
-            Reader reader = readerService.fetch(request.getParameter("readerCode"));
 
             try {
-                // TODO: Read real dates
-                DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                List<Service> services = serviceService.getForRangeAndReader(reader, format.parse("2019-11-01"), format.parse("2019-11-30"));
-                model.addAttribute("services", services);
-                model.addAttribute("readerCode", reader.getCode());
+                Reader reader = readerService.fetch(request.getParameter("readerCode"));
+                processReaderRequest(model, request, reader);
                 return "pdfReportView";
             } catch (ParseException e) {
                 log.error(e.getMessage(), e);
@@ -102,6 +97,23 @@ public class ReportController {
         }
 
         return "redirect:/reports/readers";
+    }
+
+    private void processReaderRequest(Model model, Request request, Reader reader) throws ParseException {
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date from = StringUtils.hasText(request.getParameter("from"))
+                ? format.parse(request.getParameter("from"))
+                : format.parse("2019-11-01");
+
+        Date to = StringUtils.hasText(request.getParameter("to"))
+                ? format.parse(request.getParameter("to"))
+                : format.parse("2019-11-30");
+
+        List<Service> services = serviceService.getForRangeAndReader(reader, from, to);
+        model.addAttribute("services", services);
+        model.addAttribute("readerCode", reader.getCode());
+        model.addAttribute("from", format.format(from));
+        model.addAttribute("to", format.format(to));
     }
 }
 

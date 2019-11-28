@@ -59,10 +59,13 @@
         </c:forEach>
         </tbody>
     </table>
-    <form action="services/pdf" method="post">
-        <input type="hidden" value="${month}" name="month"/>
-        <input type="submit" value="Generate PDF" />
-    </form>
+
+    <c:if test="${not empty services}">
+        <form action="services/pdf" method="post">
+            <input type="hidden" value="${month}" name="month"/>
+            <input type="submit" value="Generate PDF" />
+        </form>
+    </c:if>
 
 </div>
 </body>
