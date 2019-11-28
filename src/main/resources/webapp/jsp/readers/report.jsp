@@ -8,11 +8,17 @@
 <div>
     <h1>Reader reports</h1>
     <form action="readers" method="post">
+        <label for="readerCode">Select a reader</label>
+        <br/>
         <input type="text" name="readerCode" placeholder="Reader code"/>
         <br/>
-        <input type="date" name="from" placeholder="From date"/>
         <br/>
-        <input type="date" name="to" placeholder="To date"/>
+
+        <label for="from">From date: </label>
+        <input type="date" name="from" value="${from}"/><br/>
+
+        <label for="to">To date: </label>
+        <input type="date" name="to" value="${to}"/>
         <br/>
         <input type="submit" value="Check services"/>
     </form>
@@ -61,11 +67,15 @@
         </c:forEach>
         </tbody>
     </table>
-    <form action="services/pdf" method="post">
-        <input type="hidden" value="${month}" name="month"/>
-        <input type="submit" value="Generate PDF" />
-    </form>
 
+    <c:if test="${not empty services}">
+        <form action="readers/pdf" method="post">
+            <input type="hidden" value="${readerCode}" name="readerCode"/>
+            <input type="hidden" value="${from}" name="from"/>
+            <input type="hidden" value="${to}" name="to"/>
+            <input type="submit" value="Generate PDF" />
+        </form>
+    </c:if>
 </div>
 </body>
 </html>
