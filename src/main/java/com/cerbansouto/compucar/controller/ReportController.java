@@ -18,8 +18,10 @@ import javax.persistence.EntityNotFoundException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -101,19 +103,35 @@ public class ReportController {
 
     private void processReaderRequest(Model model, Request request, Reader reader) throws ParseException {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
         Date from = StringUtils.hasText(request.getParameter("from"))
                 ? format.parse(request.getParameter("from"))
-                : format.parse("2019-11-01");
+                : getFirstDayOfCurrentMonth();
 
         Date to = StringUtils.hasText(request.getParameter("to"))
                 ? format.parse(request.getParameter("to"))
-                : format.parse("2019-11-30");
+                : getLastDayOfCurrentMonth();
 
         List<Service> services = serviceService.getForRangeAndReader(reader, from, to);
         model.addAttribute("services", services);
         model.addAttribute("readerCode", reader.getCode());
         model.addAttribute("from", format.format(from));
         model.addAttribute("to", format.format(to));
+        model.addAttribute("serviceCount", services.size());
+        model.addAttribute("minutes", services.stream().map(s -> s.getServiceTime())
+                .collect(Collectors.summingInt(Integer::intValue)));
+        model.addAttribute("earnings", services.stream().map(s -> (double)s.getCost())
+                .collect(Collectors.summingDouble(Double::doubleValue)));
+    }
+
+    private Date getFirstDayOfCurrentMonth() {
+        LocalDate today = LocalDate.now();
+        return java.sql.Date.valueOf(today.withDayOfMonth(1));
+    }
+
+    private Date getLastDayOfCurrentMonth() {
+        LocalDate today = LocalDate.now();
+        return java.sql.Date.valueOf(today.withDayOfMonth(today.lengthOfMonth()));
     }
 }
 

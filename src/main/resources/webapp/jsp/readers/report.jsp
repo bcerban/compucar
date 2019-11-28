@@ -26,6 +26,17 @@
 
 <div>
     <h2>Services</h2>
+
+    <c:if test="${not empty serviceCount}">
+        <h5>Service count for period: ${serviceCount}</h5>
+    </c:if>
+    <c:if test="${not empty minutes}">
+        <h5>Minutes of use: ${minutes}</h5>
+    </c:if>
+    <c:if test="${not empty earnings}">
+        <h5>Earnings: $${earnings}</h5>
+    </c:if>
+
     <table border="1">
         <thead>
         <th>Code</th>
