@@ -24,7 +24,7 @@
         <mysql.connector.version>8.0.17</mysql.connector.version>
         <c3p0.version>0.9.5.2</c3p0.version>
         <hibernate.version>5.2.9.Final</hibernate.version>
-        <junit.version>4.9</junit.version>
+        <junit.version>4.13.1</junit.version>
         <mockito.version>2.23.4</mockito.version>
     </properties>
 
